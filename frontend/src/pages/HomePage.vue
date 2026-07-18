@@ -1,38 +1,17 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { products, categories, formatPrice } from '../../data/mock.js'
-import ProductCard from '../components/product/ProductCard'
-
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import ProductCard from '../components/product/ProductCard';
 import {
-  ChevronRight, ArrowRight, Zap, Clock, TrendingUp, Award, Sparkles,
-  Tag, Truck, ShieldCheck, Star, Eye, Flame, Percent, Gift, Headphones,
-} from 'lucide-vue-next'
-
-const router = useRouter()
-const { addToCart, toggleWishlist, isInWishlist } = useStore()
-
-/* ------------------------------------------------------------------ */
-/* Data selectors                                                      */
-/* ------------------------------------------------------------------ */
-const featuredProducts = computed(() =>
-  [...products].sort((a, b) => b.rating - a.rating).slice(0, 8)
-)
-
-const flashSaleProducts = computed(() =>
-  products.filter(p => p.discount >= 25).slice(0, 10)
-)
-
-const bestSellers = computed(() =>
-  [...products].sort((a, b) => b.sold - a.sold).slice(0, 4)
-)
-
-const newArrivals = computed(() =>
-  [...products].slice(-4).reverse()
-)
-
-const heroProduct = computed(() => products[0])
-
+  Award,
+  Gift,
+  Headphones,
+  ShieldCheck,
+  Sparkles,
+  Tag,
+  TrendingUp,
+  Truck,
+  Zap
+} from "@lucide/vue";
 /* ------------------------------------------------------------------ */
 /* Countdown timer for flash sale                                      */
 /* ------------------------------------------------------------------ */
@@ -47,7 +26,6 @@ const timeParts = computed(() => {
   const seconds = Math.floor((total % 60_000) / 1000)
   return { hours, minutes, seconds }
 })
-
 const pad = (n) => String(n).padStart(2, '0')
 
 onMounted(() => {
@@ -55,35 +33,13 @@ onMounted(() => {
   tick()
   timer = setInterval(tick, 1000)
 })
-
 onUnmounted(() => clearInterval(timer))
-
-/* ------------------------------------------------------------------ */
-/* Newsletter                                                          */
-/* ------------------------------------------------------------------ */
-const email = ref('')
-const subscribed = ref(false)
-
-function subscribe() {
-  if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) return
-  subscribed.value = true
-  email.value = ''
-  setTimeout(() => (subscribed.value = false), 4000)
-}
-
-/* ------------------------------------------------------------------ */
-/* Trust badges                                                        */
-/* ------------------------------------------------------------------ */
 const trustBadges = [
   { icon: Truck, title: 'Fast Delivery', desc: 'Free shipping on orders over $50' },
   { icon: ShieldCheck, title: 'Secure Payment', desc: '256-bit SSL encrypted checkout' },
   { icon: Gift, title: 'Easy Returns', desc: '30-day hassle-free return policy' },
   { icon: Headphones, title: '24/7 Support', desc: 'Dedicated help anytime you need' },
 ]
-
-/* ------------------------------------------------------------------ */
-/* Promo banners                                                       */
-/* ------------------------------------------------------------------ */
 const promoBanners = [
   {
     title: 'Summer Collection',
@@ -104,10 +60,6 @@ const promoBanners = [
     image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
 ]
-
-/* ------------------------------------------------------------------ */
-/* Category icon map (mock stores icon names as strings)               */
-/* ------------------------------------------------------------------ */
 const categoryIcons = {
   Smartphone: Tag,
   Shirt: Sparkles,
@@ -122,9 +74,6 @@ const categoryIcons = {
 
 <template>
   <div class="min-h-screen">
-    <!-- ============================================================ -->
-    <!-- 1. HERO BANNER                                               -->
-    <!-- ============================================================ -->
     <section class="section pt-6 sm:pt-8">
       <div class="relative overflow-hidden rounded-3xl gradient-dark text-white">
         <!-- Decorative mesh -->
