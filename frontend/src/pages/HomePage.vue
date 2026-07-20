@@ -1,24 +1,28 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import ProductCard from '../components/product/ProductCard';
-import {
-  Award,
-  Gift,
-  Headphones,
-  ShieldCheck,
-  Sparkles,
-  Tag,
-  TrendingUp,
-  Truck,
-  Zap
-} from "@lucide/vue";
-/* ------------------------------------------------------------------ */
-/* Countdown timer for flash sale                                      */
-/* ------------------------------------------------------------------ */
+import {ref, computed, onMounted, onUnmounted, reactive} from 'vue';
+import {Gift,Headphones,ShieldCheck,Sparkles,Truck,Zap,ArrowRight,Laptop,Shirt,House,HeartPulse,Dumbbell,BookOpen,Gamepad2,Tag,Flame,Clock,Percent,ChevronRight} from "@lucide/vue";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import {FreeMode} from 'swiper/modules';
+import 'swiper/css';
+import {getHomeData} from "@/services/HomeService.js";
+import {calcDiscount} from "../utils/helpers.js";
+import {useCategoryStore} from "@/stores/category.js";
+import SectionHeader from "@/components/ui/SectionHeader.vue";
+import ProductCard from "@/components/product/ProductCard.vue";
+const categoryStore = useCategoryStore();
+const homeData = reactive({});
+onMounted(async () => {
+  const tick = () => { remaining.value = saleEnd.value - Date.now() }
+  tick()
+  timer = setInterval(tick, 1000)
+  Object.assign(homeData, await getHomeData());
+  if (!categoryStore.categories.length) {
+    await categoryStore.fetchCategories();
+  }
+});
 const saleEnd = ref(Date.now() + 8 * 60 * 60 * 1000 + 42 * 60 * 1000) // ~8h 42m from load
 const remaining = ref(0)
 let timer = null
-
 const timeParts = computed(() => {
   const total = Math.max(0, remaining.value)
   const hours = Math.floor(total / 3_600_000)
@@ -27,12 +31,6 @@ const timeParts = computed(() => {
   return { hours, minutes, seconds }
 })
 const pad = (n) => String(n).padStart(2, '0')
-
-onMounted(() => {
-  const tick = () => { remaining.value = saleEnd.value - Date.now() }
-  tick()
-  timer = setInterval(tick, 1000)
-})
 onUnmounted(() => clearInterval(timer))
 const trustBadges = [
   { icon: Truck, title: 'Fast Delivery', desc: 'Free shipping on orders over $50' },
@@ -61,14 +59,13 @@ const promoBanners = [
   },
 ]
 const categoryIcons = {
-  Smartphone: Tag,
-  Shirt: Sparkles,
-  Sofa: Truck,
-  Sparkles: Sparkles,
-  Dumbbell: TrendingUp,
-  BookOpen: Award,
-  Gamepad2: Zap,
-  ShoppingBasket: Gift,
+  Laptop,
+  Shirt,
+  House,
+  HeartPulse,
+  Dumbbell,
+  BookOpen,
+  Gamepad2,
 }
 </script>
 
@@ -80,7 +77,6 @@ const categoryIcons = {
         <div class="absolute inset-0 gradient-mesh opacity-60" aria-hidden="true" />
         <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-500/20 blur-3xl" aria-hidden="true" />
         <div class="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-accent-500/15 blur-3xl" aria-hidden="true" />
-
         <div class="relative grid lg:grid-cols-2 gap-8 items-center px-6 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-20">
           <!-- Copy -->
           <div class="max-w-xl">
@@ -94,17 +90,15 @@ const categoryIcons = {
             <p class="mt-4 text-base sm:text-lg text-ink-300 max-w-md">
               Shop thousands of curated products at unbeatable prices. Fast delivery, secure checkout, and 30-day easy returns.
             </p>
-
             <div class="mt-7 flex flex-wrap gap-3">
               <router-link to="/shop" class="btn-primary btn-lg">
                 Shop Now
                 <ArrowRight class="w-5 h-5" />
               </router-link>
               <router-link to="/shop?cat=electronics" class="btn-secondary btn-lg bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30">
-                Explore Electronics
+                Explore {{homeData.heroProduct?.category.name}}
               </router-link>
             </div>
-
             <!-- Mini stats -->
             <dl class="mt-9 grid grid-cols-3 gap-4 max-w-md">
               <div>
@@ -121,23 +115,24 @@ const categoryIcons = {
               </div>
             </dl>
           </div>
-
           <!-- Featured product image -->
-          <div class="relative hidden lg:block">
+          <div v-if="homeData.heroProduct" class="relative hidden lg:block">
             <div class="relative aspect-square max-w-md ml-auto">
               <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-500/30 to-accent-500/20 blur-2xl" aria-hidden="true" />
               <img
-                :src="heroProduct.image"
-                :alt="heroProduct.name"
+                :src="homeData.heroProduct.image"
+                :alt="homeData.heroProduct.name"
                 class="relative rounded-3xl object-cover w-full h-full shadow-2xl ring-1 ring-white/10"
               />
               <!-- Floating price card -->
               <div class="absolute -bottom-5 -left-5 glass-dark rounded-2xl p-4 shadow-xl border border-white/10 max-w-[200px]">
                 <p class="text-xs text-ink-400 mb-1">Featured Deal</p>
-                <p class="text-sm font-semibold text-white clamp-2 leading-snug">{{ heroProduct.name }}</p>
+                <p class="text-sm font-semibold text-white clamp-2 leading-snug">{{ homeData.heroProduct.name }}</p>
                 <div class="mt-2 flex items-baseline gap-2">
-                  <span class="text-lg font-bold text-accent-400">{{ formatPrice(heroProduct.price) }}</span>
-                  <span class="text-xs text-ink-400 line-through">{{ formatPrice(heroProduct.oldPrice) }}</span>
+                  <span class="text-lg font-bold text-accent-400">
+                    {{calcDiscount(homeData.heroProduct.price,homeData.heroProduct.discount)}}
+                  </span>
+                  <span class="text-xs text-ink-400 line-through">{{ homeData.heroProduct.price }}</span>
                 </div>
               </div>
             </div>
@@ -145,15 +140,14 @@ const categoryIcons = {
         </div>
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 2. CATEGORY GRID                                             -->
     <!-- ============================================================ -->
     <section class="section pt-10 sm:pt-14">
-      <SectionHeader title="Shop by Category" subtitle="Find exactly what you need across our top categories" to="/shop" />
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+      <SectionHeader title="Shop by Category" subtitle="Find exactly what you need across our top categories" to="/" />
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4">
         <router-link
-          v-for="cat in categories"
+          v-for="cat in categoryStore.categories"
           :key="cat.slug"
           :to="`/shop?cat=${cat.slug}`"
           class="card card-hover group p-4 sm:p-5 flex flex-col items-center text-center gap-3"
@@ -162,18 +156,17 @@ const categoryIcons = {
             class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
             :class="cat.color"
           >
-            <component :is="categoryIcons[cat.icon] || Tag" class="w-6 h-6" />
+            <component :is="categoryIcons[cat.image] || Tag" class="w-6 h-6" />
           </span>
           <span class="text-sm font-semibold text-ink-900 clamp-1">{{ cat.name }}</span>
-          <span class="text-xs text-ink-400">{{ cat.subcategories.length }} subcategories</span>
+          <span class="text-xs text-ink-400">{{ cat.children.length }} subcategories</span>
         </router-link>
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 3. FLASH SALE                                                -->
     <!-- ============================================================ -->
-    <section class="section pt-10 sm:pt-14">
+    <section v-if="homeData.flashSaleProducts?.length" class="section pt-10 sm:pt-14">
       <div class="card overflow-hidden">
         <!-- Header bar -->
         <div class="gradient-dark text-white px-5 sm:px-7 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -189,10 +182,9 @@ const categoryIcons = {
               <p class="text-xs text-ink-400">Limited time — grab them before they're gone</p>
             </div>
           </div>
-
           <!-- Countdown -->
           <div class="flex items-center gap-2">
-            <Clock class="w-4 h-4 text-accent-400 hidden sm:block" />
+            <Clock class="w-5 h-5 text-accent-400 hidden sm:block" />
             <div class="flex items-center gap-1.5">
               <div class="flex flex-col items-center">
                 <span class="px-2 py-1.5 rounded-lg bg-white/10 text-white font-mono font-bold text-base sm:text-lg min-w-[2.5rem] text-center tabular-nums">{{ pad(timeParts.hours) }}</span>
@@ -211,36 +203,44 @@ const categoryIcons = {
             </div>
           </div>
         </div>
-
         <!-- Horizontal scroll of products -->
-        <div class="overflow-x-auto no-scrollbar p-4 sm:p-5">
-          <div class="flex gap-4 w-max">
-            <div
-              v-for="product in flashSaleProducts"
-              :key="product.id"
-              class="w-56 sm:w-64 flex-shrink-0"
-            >
-              <ProductCard :product="product" />
-            </div>
-          </div>
-        </div>
+        <Swiper
+          :modules="[FreeMode]"
+          :space-between="20"
+          :free-mode="true"
+          :grab-cursor="true"
+          :free-mode-momentum="true"
+          :breakpoints="{
+            0: {slidesPerView: 1.2},
+            640: {slidesPerView: 2},
+            768: {slidesPerView: 3},
+            1024: {slidesPerView: 4},
+            1280: {slidesPerView: 5}
+          }"
+          class="p-4 sm:p-5"
+        >
+          <SwiperSlide
+            v-for="product in homeData.flashSaleProducts"
+            :key="product.id"
+          >
+            <ProductCard :product="product" />
+          </SwiperSlide>
+        </Swiper>
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 4. FEATURED PRODUCTS GRID                                   -->
     <!-- ============================================================ -->
-    <section class="section pt-10 sm:pt-14">
+    <section v-if="homeData.featuredProducts?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="Featured Products" subtitle="Handpicked favorites our customers love" to="/shop" />
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         <ProductCard
-          v-for="product in featuredProducts"
+          v-for="product in homeData.featuredProducts"
           :key="product.id"
           :product="product"
         />
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 5. PROMO BANNERS                                            -->
     <!-- ============================================================ -->
@@ -274,35 +274,60 @@ const categoryIcons = {
         </router-link>
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 6. BEST SELLERS                                              -->
     <!-- ============================================================ -->
-    <section class="section pt-10 sm:pt-14">
+    <section v-if="homeData.bestSellers?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="Best Sellers" subtitle="Our most popular products this month" to="/shop" />
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        <ProductCard
-          v-for="product in bestSellers"
+      <Swiper
+        :modules="[FreeMode]"
+        :space-between="20"
+        :free-mode="true"
+        :grab-cursor="true"
+        :free-mode-momentum="true"
+        :breakpoints="{
+            0: {slidesPerView: 1.2},
+            640: {slidesPerView: 2},
+            768: {slidesPerView: 3},
+            1024: {slidesPerView: 4},
+            1280: {slidesPerView: 5}
+          }"
+      >
+        <SwiperSlide
+          v-for="product in homeData.bestSellers"
           :key="product.id"
-          :product="product"
-        />
-      </div>
+        >
+          <ProductCard :product="product" />
+        </SwiperSlide>
+      </Swiper>
     </section>
-
     <!-- ============================================================ -->
     <!-- 7. NEW ARRIVALS                                              -->
     <!-- ============================================================ -->
-    <section class="section pt-10 sm:pt-14">
+    <section v-if="homeData.newArrivals?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="New Arrivals" subtitle="Fresh stock just landed — be the first to own them" to="/shop" />
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        <ProductCard
-          v-for="product in newArrivals"
+      <Swiper
+        :modules="[FreeMode]"
+        :space-between="20"
+        :free-mode="true"
+        :grab-cursor="true"
+        :free-mode-momentum="true"
+        :breakpoints="{
+            0: {slidesPerView: 1.2},
+            640: {slidesPerView: 2},
+            768: {slidesPerView: 3},
+            1024: {slidesPerView: 4},
+            1280: {slidesPerView: 5}
+          }"
+      >
+        <SwiperSlide
+          v-for="product in homeData.newArrivals"
           :key="product.id"
-          :product="product"
-        />
-      </div>
+        >
+          <ProductCard :product="product" />
+        </SwiperSlide>
+      </Swiper>
     </section>
-
     <!-- ============================================================ -->
     <!-- 8. TRUST / BRAND STRIP                                       -->
     <!-- ============================================================ -->
@@ -323,7 +348,6 @@ const categoryIcons = {
         </div>
       </div>
     </section>
-
     <!-- ============================================================ -->
     <!-- 9. NEWSLETTER CTA                                            -->
     <!-- ============================================================ -->
@@ -341,9 +365,8 @@ const categoryIcons = {
             Subscribe to our newsletter for exclusive deals, new arrivals, and insider-only discounts.
           </p>
 
-          <form @submit.prevent="subscribe" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form @submit.prevent="" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
-              v-model="email"
               type="email"
               required
               placeholder="Enter your email address"
@@ -354,8 +377,7 @@ const categoryIcons = {
               <ArrowRight class="w-5 h-5" />
             </button>
           </form>
-
-          <p
+<!--          <p
             v-if="subscribed"
             class="mt-4 text-sm text-accent-200 flex items-center justify-center gap-1.5"
           >
@@ -364,7 +386,7 @@ const categoryIcons = {
           </p>
           <p v-else class="mt-4 text-xs text-white/60">
             No spam, unsubscribe at any time. We respect your privacy.
-          </p>
+          </p>-->
         </div>
       </div>
     </section>
