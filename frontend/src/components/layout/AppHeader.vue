@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {ref} from 'vue';
 import {TransitionRoot, TransitionChild, Dialog, DialogPanel,} from '@headlessui/vue';
 import {
   Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package, MapPin,Settings,LogOut,ChevronRight,Truck,Tag,Home,Info,Mail,HelpCircle,ShoppingBag,Trash2,HeartPulse,House,Laptop
@@ -26,11 +26,6 @@ function closeAll() {
   showNotifDropdown.value = false
 }
 const categoryStore = useCategoryStore();
-onMounted(async () => {
-  if (!categoryStore.categories.length){
-    await categoryStore.fetchCategories();
-  }
-});
 </script>
 
 <template>
