@@ -1,12 +1,18 @@
 <script setup>
-import {ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {TransitionRoot, TransitionChild, Dialog, DialogPanel,} from '@headlessui/vue';
 import {
-  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package, MapPin,Settings,LogOut,ChevronRight,Truck,Tag,Home,Info,Mail,HelpCircle,ShoppingBag,Trash2,HeartPulse,House,Laptop
+  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package,LogOut,ChevronRight,Truck,Tag,Home,Info,Mail,HelpCircle,Trash2,HeartPulse,House,Laptop,LogIn,ShoppingBag,MapPin,Settings
 } from "@lucide/vue";
 import {useCategoryStore} from "@/stores/category.js";
+import {useAuthStore} from "@/stores/auth.js";
+import api from "@/api/axios.js";
+import {endpoints} from "@/api/endpoints.js";
+import {useRouter} from "vue-router";
+const router = useRouter()
+const authStore = useAuthStore();
 const mobileMenuOpen = ref(false)
-const iconMap = { Laptop, Shirt, House, HeartPulse, Dumbbell, BookOpen, Gamepad2 }
+const iconMap = { Laptop, Shirt, House, HeartPulse, Dumbbell, BookOpen, Gamepad2}
 const hoveredCategory = ref(null)
 const showMegaMenu = ref(false)
 const showCartDropdown = ref(false)
@@ -25,7 +31,56 @@ function closeAll() {
   showProfileDropdown.value = false
   showNotifDropdown.value = false
 }
+const logout = async () => {
+  try {
+    const token = localStorage.getItem('auth_token');
+    const response = await api.post(endpoints.logout,{},{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if (response.data.success){
+      authStore.logout()
+      setTimeout(async () => {
+        await router.push({name: 'home'})
+      },1000);
+    }
+  }
+  catch (error) {
+    console.error(error.response.data);
+  }
+}
+onMounted(async () => {
+  if (!categoryStore.categories.length) {
+    await categoryStore.fetchCategories();
+  }
+})
 const categoryStore = useCategoryStore();
+const displayMail = computed(() => {
+  const mail = authStore.user?.email;
+  return mail.length > 17 ? mail.slice(0,17) + '...' : mail;
+});
+const displayBtn = computed(() => {
+  const name = `${authStore.user?.first_name || ''}`;
+  const mail = `${authStore.user?.email || ''}`;
+  if (name) {
+    return name.length > 5 ? name.slice(0, 5) + '...' : name
+  }
+  return mail.length > 5 ? mail.slice(0, 5) + '...' : mail
+});
+const displayName = computed(() => {
+  const name = `${authStore.user?.first_name || ''} ${authStore.user?.last_name || ''}`;
+  return name.length > 17 ? name.slice(0,17) + '...' : name;
+});
+const sliceWord = computed(() => {
+  const firstName = authStore.user?.first_name ?? ''
+  const lastName = authStore.user?.last_name ?? ''
+  const mail = authStore.user?.email ?? ''
+  return (firstName && lastName
+    ? firstName[0] + lastName[0]
+    : mail[0]
+  ).toUpperCase()
+})
 </script>
 
 <template>
@@ -146,24 +201,27 @@ const categoryStore = useCategoryStore();
               </div>
             </Transition>
           </div>
-
           <!-- Profile -->
-          <div class="relative hidden sm:block">
+          <div v-if="authStore.isAuth" class="relative hidden sm:block">
             <button
               class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-ink-100 transition-colors"
               @click="showProfileDropdown = !showProfileDropdown; showCartDropdown = false; showNotifDropdown = false"
             >
-              <div class="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-white text-xs font-bold">JC</div>
-              <span class="text-sm font-medium text-ink-700 hidden lg:block">Jordan</span>
+              <div class="w-7 h-7 rounded-full gradient-primary flex items-center justify-center text-white text-xs font-bold">{{sliceWord}}</div>
+              <span class="text-sm font-medium text-ink-700 hidden lg:block">
+                {{displayBtn}}
+              </span>
               <ChevronDown class="w-4 h-4 text-ink-400" />
             </button>
             <Transition name="dropdown">
               <div v-if="showProfileDropdown" class="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-dropdown border border-ink-200 overflow-hidden z-50">
                 <div class="flex items-center gap-3 p-4 bg-gradient-to-r from-primary-50 to-ink-50">
-                  <div class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold">JC</div>
+                  <div class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold">{{sliceWord}}</div>
                   <div>
-                    <p class="font-semibold text-ink-900">Jordan Carter</p>
-                    <p class="text-xs text-ink-500">jordan@email.com</p>
+                    <p class="font-semibold text-ink-900" :title="
+                    `${authStore.user?.first_name} ${authStore.user?.last_name}`">{{displayName}}
+                    </p>
+                    <p class="text-xs text-ink-500" :title="authStore.user?.email">{{displayMail}}</p>
                   </div>
                 </div>
                 <div class="py-2">
@@ -184,14 +242,22 @@ const categoryStore = useCategoryStore();
                   </router-link>
                 </div>
                 <div class="border-t border-ink-200 py-2">
-                  <button class="flex items-center gap-3 px-4 py-2.5 text-sm text-danger-600 hover:bg-danger-50 w-full text-left">
+                  <button type="button" @click="logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-danger-600 hover:bg-danger-50 w-full text-left">
                     <LogOut class="w-4 h-4" /> Logout
                   </button>
                 </div>
               </div>
             </Transition>
           </div>
-
+          <div v-else class="hidden sm:block">
+            <router-link
+              to="/login"
+              class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-primary-50 to-ink-50 text-primary-700 font-medium text-sm hover:from-primary-100 hover:to-ink-100 transition-all duration-200"
+            >
+              <LogIn class="w-4 h-4" />
+              <span>Sign In / Sign Up</span>
+            </router-link>
+          </div>
           <!-- Mobile menu button -->
           <button class="btn-ghost btn-icon md:hidden" @click="mobileMenuOpen = true" aria-label="Open menu">
             <Menu class="w-5 h-5" />
@@ -338,7 +404,7 @@ const categoryStore = useCategoryStore();
               <router-link to="/account/orders" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
                 <Package class="w-5 h-5 text-ink-400" /> My Orders
               </router-link>
-              <button class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger-600 hover:bg-danger-50 w-full text-left">
+              <button type="button" @click="logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger-600 hover:bg-danger-50 w-full text-left">
                 <LogOut class="w-5 h-5" /> Logout
               </button>
             </div>

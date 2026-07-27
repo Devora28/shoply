@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('discount')->default(0);
             $table->string('sku')->unique();
             $table->integer('stock')->default(0);
+            $table->string('image')->nullable();
             $table->unsignedBigInteger('sold_count')->default(0);
             $table->unsignedBigInteger('view_count')->default(0);
             $table->boolean('is_featured')->default(false);

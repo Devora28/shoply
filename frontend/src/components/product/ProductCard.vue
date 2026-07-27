@@ -12,7 +12,12 @@ defineProps({
   <div class="card card-hover group cursor-pointer relative flex flex-col" @click="router.push(`/product/${product.id}`)">
     <!-- Badges -->
     <div v-if="product.discount > 0" class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-      <span class="badge-danger"> {{product.discount}} % OFF</span>
+      <span class="rounded-full px-2.5 py-1 text-xs font-semibold
+         bg-red-300/15
+         text-red-700
+         border border-red-400/25
+         backdrop-blur
+         shadow-sm"> {{product.discount}} %</span>
     </div>
     <!-- Wishlist -->
     <button
@@ -30,6 +35,7 @@ defineProps({
         :src="product.image??''"
         :alt="product.name"
         loading="lazy"
+        decoding="async"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <!-- Quick actions on hover -->

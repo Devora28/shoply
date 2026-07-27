@@ -1,5 +1,6 @@
 <?php
 namespace App\Services;
+use App\Http\Resources\ProductCardResource;
 use App\Models\Product;
 class HomeService{
     public function index(){
@@ -9,11 +10,11 @@ class HomeService{
         $bestSellers = Product::where('is_active',true)->where('sold_count','>',1)->with(['category','brand'])->orderBy('sold_count','desc')->limit(10)->get();
         $newArrivals = Product::where('is_active',true)->with(['category','brand'])->latest()->limit(10)->get();
         return [
-            'heroProduct' => $heroProduct,
-            'flashSaleProducts' => $flashSaleProducts,
-            'featuredProducts' => $featuredProducts,
-            'bestSellers' => $bestSellers,
-            'newArrivals' => $newArrivals,
+            'heroProduct' => new ProductCardResource($heroProduct),
+            'flashSaleProducts' => ProductCardResource::collection($flashSaleProducts),
+            'featuredProducts' => ProductCardResource::collection($featuredProducts),
+            'bestSellers' => ProductCardResource::collection($bestSellers),
+            'newArrivals' => ProductCardResource::collection($newArrivals),
         ];
     }
 }

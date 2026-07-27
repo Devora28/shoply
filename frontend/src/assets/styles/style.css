@@ -181,3 +181,7 @@
 .swiper-button-next, .swiper-button-prev {
   color: #44403c !important;
 }
+[data-sonner-toast] {
+  width: auto;
+  max-width: fit-content;
+}

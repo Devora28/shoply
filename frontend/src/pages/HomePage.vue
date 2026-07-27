@@ -9,6 +9,8 @@ import {calcDiscount} from "../utils/helpers.js";
 import {useCategoryStore} from "@/stores/category.js";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import ProductCard from "@/components/product/ProductCard.vue";
+import {useTitle} from "@vueuse/core";
+useTitle('Shoply | Premium Shopping Experience')
 const categoryStore = useCategoryStore();
 const homeData = reactive({});
 onMounted(async () => {
@@ -16,9 +18,6 @@ onMounted(async () => {
   tick()
   timer = setInterval(tick, 1000)
   Object.assign(homeData, await getHomeData());
-  if (!categoryStore.categories.length) {
-    await categoryStore.fetchCategories();
-  }
 });
 const saleEnd = ref(Date.now() + 8 * 60 * 60 * 1000 + 42 * 60 * 1000) // ~8h 42m from load
 const remaining = ref(0)
