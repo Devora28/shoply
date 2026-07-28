@@ -1,0 +1,97 @@
+# =====================
+# Environment files
+# =====================
+.env
+.env.*
+!.env.example
+
+
+# =====================
+# Dependencies
+# =====================
+node_modules/
+vendor/
+
+
+# =====================
+# Build files
+# =====================
+dist/
+dist-ssr/
+public/build/
+
+
+# =====================
+# Laravel
+# =====================
+storage/*.key
+storage/pail
+public/storage
+
+auth.json
+.phpunit.result.cache
+/.phpunit.cache
+
+Homestead.json
+Homestead.yaml
+
+_ide_helper.php
+
+
+# =====================
+# Logs
+# =====================
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# =====================
+# IDE / Editors
+# =====================
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+.cursor/
+.codex/
+.nova/
+.zed/
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# =====================
+# OS files
+# =====================
+.DS_Store
+Thumbs.db
+
+
+# =====================
+# Frontend / Vite
+# =====================
+coverage/
+*.local
+*.tsbuildinfo
+
+.eslintcache
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+# Vitest
+__screenshots__/
+
+# Vite
+*.timestamp-*-*.mjs
+public/hot
