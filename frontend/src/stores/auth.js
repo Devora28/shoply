@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = null;
         return;
       }
-      const response = await api.get(endpoints.user,{
+      const response = await api.get(endpoints.authUser,{
         headers: {
           Authorization: `Bearer ${token}`
         }

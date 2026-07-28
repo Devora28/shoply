@@ -57,14 +57,14 @@ class AuthController extends Controller
         if(!$result){
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid email or password.'
+                'message' => 'Invalid email or password'
             ],401);
         }
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'success' => true,
-            'message' => 'Login successful.',
+            'message' => 'Logged in successfully',
             'token' => $token,
         ]);
     }

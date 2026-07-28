@@ -1,5 +1,5 @@
 <script setup>
-import RatingStars from "@/components/common/RatingStars.vue";
+import RatingStars from "@/components/ui/RatingStars.vue";
 import { Heart, ShoppingCart, Eye } from '@lucide/vue';
 import { useRouter } from 'vue-router';
 import {calcDiscount} from "../../utils/helpers.js";
@@ -9,7 +9,9 @@ defineProps({
 });
 </script>
 <template>
-  <div class="card card-hover group cursor-pointer relative flex flex-col" @click="router.push(`/product/${product.id}`)">
+  <div class="card card-hover group cursor-pointer relative flex flex-col"
+       @click="router.push(`/products/${product.id}/${product.slug}`)"
+  >
     <!-- Badges -->
     <div v-if="product.discount > 0" class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
       <span class="rounded-full px-2.5 py-1 text-xs font-semibold
@@ -46,7 +48,9 @@ defineProps({
         >
           <ShoppingCart class="w-4 h-4" /> Add
         </button>
-        <button class="btn-secondary btn-sm btn-icon" @click.stop="router.push(`/product/${product.id}`)">
+        <button class="btn-secondary btn-sm btn-icon"
+            @click.stop="router.push(`/products/${product.id}/${product.slug}`)"
+        >
           <Eye class="w-4 h-4" />
         </button>
       </div>

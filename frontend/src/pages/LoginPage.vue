@@ -141,7 +141,7 @@ async function submitOtp() {
   try {
     loading.value = true;
     otpError.value = '';
-    const response = await api.post(endpoints.verifyOtp,{
+    const response = await api.post(endpoints.authOtp,{
       email: email.value,
       otp: otpDigits.join(''),
     });
@@ -150,6 +150,7 @@ async function submitOtp() {
       setTimeout(() => {
         router.push({name: 'home'})
       }, 500)
+      toast.success(response.data.message);
     }
   }
   catch (error) {
@@ -168,7 +169,7 @@ async function submitPassword() {
   try {
     loading.value = true
     passwordError.value = ''
-    const response = await api.post(endpoints.verifyPassword,{
+    const response = await api.post(endpoints.authPassword,{
       email: email.value,
       password: password.value,
     });
@@ -177,7 +178,7 @@ async function submitPassword() {
       setTimeout(() => {
         router.push({name: 'home'})
       }, 500)
-      toast.success('Login successful');
+      toast.success(response.data.message);
     }
   }
   catch (error) {

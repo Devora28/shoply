@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->integer('stock')->default(0);
             $table->string('image')->nullable();
+            $table->decimal('rating', 2, 1)->default(0);
             $table->unsignedBigInteger('sold_count')->default(0);
             $table->unsignedBigInteger('view_count')->default(0);
             $table->boolean('is_featured')->default(false);

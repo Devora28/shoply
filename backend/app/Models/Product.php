@@ -10,7 +10,7 @@ class Product extends Model
     protected $table = 'products';
     protected $guarded = [];
     protected $casts = [
-
+        'meta' => 'array',
     ];
     public function categories(){
         return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id');
@@ -20,5 +20,8 @@ class Product extends Model
     }
     public function brand(){
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+    public function images(){
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
 }
