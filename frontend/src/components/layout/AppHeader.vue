@@ -69,8 +69,11 @@ const displayBtn = computed(() => {
   return mail.length > 5 ? mail.slice(0, 5) + '...' : mail
 });
 const displayName = computed(() => {
-  const name = `${authStore.user?.first_name || ''} ${authStore.user?.last_name || ''}`;
-  return name.length > 17 ? name.slice(0,17) + '...' : name;
+  const firstName = authStore.user?.first_name?.trim() || '';
+  const lastName = authStore.user?.last_name?.trim() || '';
+  if (firstName && lastName) {
+    return `${firstName.charAt(0).toUpperCase()}${firstName.slice(1).toLowerCase()} ${lastName.charAt(0).toUpperCase()}.`
+  }
 });
 const sliceWord = computed(() => {
   const firstName = authStore.user?.first_name ?? ''

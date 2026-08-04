@@ -17,4 +17,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function(){
     })->middleware('auth:sanctum')->name('auth.user');
 });
 Route::apiResource('products',ProductController::class);
+Route::get('products/{product}/reviews',[ProductController::class,'reviews'])->name('products.reviews');
+Route::post('products/{product}/reviews',[ProductController::class,'storeReview'])->middleware('auth:sanctum')->name('submit.review');
 

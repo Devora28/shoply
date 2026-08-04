@@ -15,9 +15,8 @@ defineProps({
     <!-- Badges -->
     <div v-if="product.discount > 0" class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
       <span class="rounded-full px-2.5 py-1 text-xs font-semibold
-         bg-red-300/15
-         text-red-700
-         border border-red-400/25
+         bg-gradient-to-r from-primary-300/30 to-ink-50 text-primary-700
+         border border-primary-400/25
          backdrop-blur
          shadow-sm"> {{product.discount}} %</span>
     </div>

@@ -7,4 +7,5 @@ export const endpoints  = {
   authUser: '/auth/user',
   logout: '/auth/logout',
   product: (id) => `/products/${id}`,
+  ProductReview: (id) => `/products/${id}/reviews`,
 }

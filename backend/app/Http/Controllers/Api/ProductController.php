@@ -37,6 +37,27 @@ class ProductController extends Controller
             'data' => $this->productService->productDetails($product)
         ]);
     }
+    public function reviews(Request $request,Product $product){
+        return response()->json([
+            'success' => true,
+            'message' => 'Product Reviews',
+            'data' => $this->productService->productReviews($request,$product)
+        ]);
+    }
+    public function storeReview(Request $request,Product $product){
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'title' => 'nullable|string|min:5|max:100',
+            'comment' => 'required|string|min:5|max:2000',
+            'pros' => 'nullable|string|max:100',
+            'cons' => 'nullable|string|max:100',
+        ]);
+        $review = $this->productService->createReview($product,$validated,auth()->id());
+        return response()->json([
+            'success' => true,
+            'message' => 'Review Added Successfully',
+        ],201);
+    }
 
     /**
      * Update the specified resource in storage.

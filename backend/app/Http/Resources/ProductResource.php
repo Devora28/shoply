@@ -29,9 +29,11 @@ class ProductResource extends JsonResource
             'is_featured' => $this->is_featured,
             'weight' => $this->weight,
             'meta' => $this->meta,
+            'reviews_count' => $this->reviews_count,
             'brand' => $this->whenLoaded('brand'),
             'category' => $this->whenLoaded('category'),
             'images' => $this->whenLoaded('images'),
+            'reviews' => $this->whenLoaded('reviews'),
         ];
     }
 }
