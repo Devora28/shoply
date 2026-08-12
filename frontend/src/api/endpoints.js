@@ -8,4 +8,5 @@ export const endpoints  = {
   logout: '/auth/logout',
   product: (id) => `/products/${id}`,
   ProductReview: (id) => `/products/${id}/reviews`,
+  profileDashboard: '/profile/dashboard',
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, computed, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import { ShoppingCart, Mail, Lock, ArrowLeft, ShieldCheck, KeyRound } from '@lucide/vue'
 import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
@@ -8,7 +8,7 @@ import {useAuthStore} from "@/stores/auth.js";
 import {toast} from "vue-sonner";
 const authStore = useAuthStore()
 const router = useRouter()
-
+const route = useRoute()
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
@@ -147,8 +147,9 @@ async function submitOtp() {
     });
     if (response.data.success){
       await authStore.login(response.data.token);
+      const redirectUrl = route.query.redirect
       setTimeout(() => {
-        router.push({name: 'home'})
+        router.push(redirectUrl || '/')
       }, 500)
       toast.success(response.data.message);
     }
@@ -175,8 +176,9 @@ async function submitPassword() {
     });
     if (response.data.success){
       await authStore.login(response.data.token);
+      const redirectUrl = route.query.redirect
       setTimeout(() => {
-        router.push({name: 'home'})
+        router.push(redirectUrl || '/')
       }, 500)
       toast.success(response.data.message);
     }

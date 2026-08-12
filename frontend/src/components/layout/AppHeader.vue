@@ -228,7 +228,7 @@ const sliceWord = computed(() => {
                   </div>
                 </div>
                 <div class="py-2">
-                  <router-link to="/account" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">
+                  <router-link :to="{name: 'profile.dashboard'}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">
                     <Package class="w-4 h-4 text-ink-400" /> Dashboard
                   </router-link>
                   <router-link to="/account/orders" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">

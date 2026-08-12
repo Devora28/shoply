@@ -4,6 +4,7 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import ProductDetails from "@/pages/ProductDetails.vue";
+import ProfileDashboard from "@/pages/user/ProfileDashboard.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,12 @@ const router = createRouter({
           name: 'products.show',
           component: ProductDetails
         },
+        {
+          path: 'profile/dashboard',
+          name: 'profile.dashboard',
+          component: ProfileDashboard,
+          meta: { requiresAuth: true },
+        },
       ]
     },
     {
@@ -38,9 +45,15 @@ const router = createRouter({
   ],
 });
 router.beforeEach(async (to) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore();
+  await authStore.fetchUser();
   if (to.meta.requiresAuth && !authStore.isAuth) {
-    return '/login'
+    return {
+      name: 'login.page',
+      query: {
+        redirect: to.fullPath,
+      }
+    }
   }
 });
 export default router

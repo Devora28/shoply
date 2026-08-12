@@ -3,6 +3,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 Route::get('/',[HomeController::class,'index'])->name('home');
@@ -19,4 +20,5 @@ Route::prefix('auth')->controller(AuthController::class)->group(function(){
 Route::apiResource('products',ProductController::class);
 Route::get('products/{product}/reviews',[ProductController::class,'reviews'])->name('products.reviews');
 Route::post('products/{product}/reviews',[ProductController::class,'storeReview'])->middleware('auth:sanctum')->name('submit.review');
+Route::get('profile/dashboard',[ProfileController::class,'index'])->middleware('auth:sanctum')->name('profile.dashboard');
 

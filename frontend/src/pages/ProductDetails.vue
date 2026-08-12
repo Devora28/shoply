@@ -9,7 +9,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/thumbs'
 import {
   Heart, ShoppingCart, Share2, Truck, ShieldCheck, RotateCcw, Check,
-  Star, ChevronDown, Package, BadgeCheck, MessageSquare,
+  Star, ChevronDown, Package, BadgeCheck, MessageSquare,LogIn
 } from '@lucide/vue'
 import RatingStars from "@/components/ui/RatingStars.vue";
 import ProductCard from "@/components/product/ProductCard.vue";
@@ -20,6 +20,8 @@ import BaseBreadcrumb from "@/components/ui/BaseBreadcrumb.vue";
 import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
 import {calcDiscount} from "@/utils/helpers.js";
+import {useAuthStore} from "@/stores/auth.js";
+const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
@@ -605,7 +607,7 @@ const loadMoreReviews = async () => {
             </div>
 
             <!-- Write a review form -->
-            <div ref="writeReviewForm" id="write-review" class="card p-5 mt-6">
+            <div v-if="authStore.isAuth" ref="writeReviewForm" id="write-review" class="card p-5 mt-6">
               <h3 class="text-lg font-bold text-ink-900 mb-4">Write a Review</h3>
               <form @submit.prevent="submitReview" class="space-y-4">
                 <div>
@@ -685,6 +687,44 @@ const loadMoreReviews = async () => {
                   {{ reviewSubmitting ? 'Submitting...' : 'Submit Review' }}
                 </button>
               </form>
+            </div>
+            <!-- Guest User -->
+            <div
+              v-else
+              ref="writeReviewForm"
+              id="write-review-form"
+              class="card p-5 mt-6"
+            >
+              <div class="flex flex-col items-center text-center py-6">
+                <div
+                  class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-4"
+                >
+                  <MessageSquare class="w-6 h-6 text-primary-600" />
+                </div>
+
+                <h3 class="text-lg font-bold text-ink-900 mb-2">
+                  Want to share your experience?
+                </h3>
+
+                <p class="text-sm text-ink-600 max-w-md mb-5">
+                  Please sign in to your account to write a review for this product.
+                </p>
+
+                <button
+                  type="button"
+                  class="btn-primary btn-md flex items-center justify-center gap-2"
+                  @click="
+                    router.push({
+                      name: 'login.page',
+                      query: {
+                        redirect: router.currentRoute.value.fullPath
+                      }
+                    })"
+                >
+                  <LogIn class="w-4 h-4" />
+                  Sign in to write a review
+                </button>
+              </div>
             </div>
           </div>
 
@@ -779,7 +819,7 @@ const loadMoreReviews = async () => {
               </div>
 
               <!-- Write a review form -->
-              <div ref="writeReviewForm" id="write-review-form" class="card p-5 mt-6">
+              <div v-if="authStore.isAuth" ref="writeReviewForm" id="write-review-form" class="card p-5 mt-6">
                 <h3 class="text-lg font-bold text-ink-900 mb-4">Write a Review</h3>
                 <form @submit.prevent="submitReview" class="space-y-4">
                   <div>
@@ -861,6 +901,44 @@ const loadMoreReviews = async () => {
                     {{ reviewSubmitting ? 'Submitting...' : 'Submit Review' }}
                   </button>
                 </form>
+              </div>
+              <!-- Guest User -->
+              <div
+                v-else
+                ref="writeReviewForm"
+                id="write-review-form"
+                class="card p-5 mt-6"
+              >
+                <div class="flex flex-col items-center text-center py-6">
+                  <div
+                    class="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center mb-4"
+                  >
+                    <MessageSquare class="w-6 h-6 text-primary-600" />
+                  </div>
+
+                  <h3 class="text-lg font-bold text-ink-900 mb-2">
+                    Want to share your experience?
+                  </h3>
+
+                  <p class="text-sm text-ink-600 max-w-md mb-5">
+                    Please sign in to your account to write a review for this product.
+                  </p>
+
+                  <button
+                    type="button"
+                    class="btn-primary btn-md flex items-center justify-center gap-2"
+                    @click="
+                      router.push({
+                        name: 'login.page',
+                        query: {
+                          redirect: router.currentRoute.value.fullPath
+                        }
+                      })"
+                  >
+                    <LogIn class="w-4 h-4" />
+                    Sign in to write a review
+                  </button>
+                </div>
               </div>
             </div>
           </div>
