@@ -1,32 +1,31 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue'
-import { useRoute } from 'vue-router'
 import {
-  LayoutDashboard, Package, Clock, CheckCircle2, Heart, TrendingUp,
-  ChevronRight, Star, Truck, RotateCcw, ShoppingBag, User, Bell, MapPin,
-  Settings,BellOff,Plus
+  Package, Clock, CheckCircle2, Heart, TrendingUp,
+  ChevronRight, Star, Truck, RotateCcw, ShoppingBag, Bell,BellOff,Plus
 } from '@lucide/vue'
 import BaseBreadcrumb from "@/components/ui/BaseBreadcrumb.vue";
 import BaseButton from '@/components/ui/BaseButton.vue'
-import RatingStars from '@/components/ui/RatingStars.vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import {FreeMode} from "swiper/modules";
+import 'swiper/css'
 import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
 import dayjs from 'dayjs';
-const route = useRoute()
+import ProductCard from "@/components/product/ProductCard.vue";
+import {useTitle} from "@vueuse/core";
+import DesktopDashboardSidebar from "@/components/ui/DesktopDashboardSidebar.vue";
+import MobileDashboardSidebar from "@/components/ui/MobileDashboardSidebar.vue";
+useTitle('Shoply | Profile Dashboard')
 const user = ref({});
-const navLinks = [
-  { label: 'Dashboard', to: '/profile/dashboard', icon: LayoutDashboard },
-  { label: 'Profile Info', to: '/account/info', icon: User },
-  { label: 'My Orders', to: '/account/orders', icon: Package },
-  { label: 'Notifications', to: '/account/notifications', icon: Bell },
-  { label: 'Addresses', to: '/account/addresses', icon: MapPin },
-  { label: 'Settings', to: '/account/settings', icon: Settings },
-]
+const isLoading = ref(true);
+const recommendedProducts = ref({});
+const wishlistCount = ref(0);
 const stats = computed(() => {
   const total = user.value?.orders?.length
   const pending = user.value?.orders?.filter(o => o.status === 'processing' || o.status === 'shipped').length
   const delivered = user.value?.orders?.filter(o => o.status === 'delivered').length
-  const wishlist = 5
+  const wishlist = wishlistCount?.value;
   return [
     { label: 'Total Orders', value: total, icon: Package, color: 'primary', to: '/account/orders' },
     { label: 'Pending', value: pending, icon: Clock, color: 'warning', to: '/account/orders' },
@@ -59,37 +58,23 @@ const statColor = {
 onMounted(async () => {
   const token = localStorage.getItem('auth_token');
   try {
-    const response = await api.get(endpoints.profileDashboard,{
+    const response = await api.get(endpoints.accountDashboard,{
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-    user.value = response.data.data;
+    user.value = response.data.data.user;
+    recommendedProducts.value = response.data.data.recommendedProducts;
+    wishlistCount.value = response.data.data.user.wishlist.items_count;
   }
   catch (error) {
     console.error(error)
   }
-});
-const displayName = computed(() => {
-  const firstName = user.value?.first_name?.trim() || '';
-  const lastName = user.value?.last_name?.trim() || '';
-  if (firstName && lastName) {
-    return `${firstName.charAt(0).toUpperCase()}${firstName.slice(1).toLowerCase()} ${lastName.charAt(0).toUpperCase()}.`
+  finally {
+    isLoading.value = false;
   }
 });
-const displayMail = computed(() => {
-  const mail = user.value?.email;
-  return mail?.length > 17 ? mail.slice(0,17) + '...' : mail;
-});
-const sliceWord = computed(() => {
-  const firstName = user.value?.first_name ?? ''
-  const lastName = user.value?.last_name ?? ''
-  const mail = user.value?.email ?? ''
-  return (firstName && lastName
-      ? firstName[0] + lastName[0]
-      : mail[0]
-  )?.toUpperCase()
-})
+
 const userFullName = computed(() => {
   const firstName = user.value?.first_name ?? '';
   const lastName = user.value?.last_name ?? '';
@@ -104,51 +89,12 @@ const userFullName = computed(() => {
 
 <template>
   <div class="section py-8 lg:py-12">
-    <BaseBreadcrumb :items="['Account', 'Dashboard']" class="mb-6" />
+    <BaseBreadcrumb :items="['Profile', 'Dashboard']" class="mb-6" />
     <div class="grid lg:grid-cols-[260px_1fr] gap-8">
       <!-- Sidebar (desktop) / Tab bar (mobile) -->
-      <aside class="hidden lg:block">
-        <div class="card p-4 sticky top-24">
-          <div class="flex items-center gap-3 px-2 pb-4 mb-2 border-b border-ink-200">
-            <div class="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-bold">
-              {{sliceWord}}
-            </div>
-            <div class="min-w-0">
-              <p class="font-semibold text-ink-900 text-sm truncate">{{ displayName ?? 'Shoply User' }}</p>
-              <p class="text-xs text-ink-500 truncate">{{ displayMail }}</p>
-            </div>
-          </div>
-          <nav class="space-y-1">
-            <router-link
-              v-for="link in navLinks"
-              :key="link.to"
-              :to="link.to"
-              class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors"
-              :class="route.path === link.to
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900'"
-            >
-              <component :is="link.icon" class="w-4 h-4 shrink-0" />
-              <span>{{ link.label }}</span>
-            </router-link>
-          </nav>
-        </div>
-      </aside>
+      <DesktopDashboardSidebar/>
       <!-- Mobile tab bar -->
-      <div class="lg:hidden w-full min-w-0 mb-2">
-        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-          <router-link
-            v-for="link in navLinks"
-            :key="link.to"
-            :to="link.to"
-            class="chip shrink-0"
-            :class="{ 'chip-active': route.path === link.to }"
-          >
-            <component :is="link.icon" class="w-4 h-4" />
-            {{ link.label }}
-          </router-link>
-        </div>
-      </div>
+      <MobileDashboardSidebar/>
       <!-- Main content -->
       <div class="min-w-0 space-y-8">
         <!-- Welcome header -->
@@ -157,15 +103,19 @@ const userFullName = computed(() => {
           <div class="absolute -right-4 bottom-0 w-24 h-24 rounded-full bg-white/10" />
           <div class="relative">
             <p class="text-white/80 text-sm mb-1">Welcome back</p>
-            <h1 class="text-2xl sm:text-3xl font-bold mb-2">{{ userFullName }} 👋</h1>
-            <p class="text-white/80 text-sm">Member since {{ dayjs(user?.created_at).format('MMM D, YYYY') }} · {{ user?.email }}</p>
+            <div v-if="isLoading" class="h-9 w-56 rounded-lg skeleton-dark mb-2"></div>
+            <h1 v-else class="text-2xl sm:text-3xl font-bold mb-2">{{ userFullName }} 👋</h1>
+            <div v-if="isLoading" class="h-5 w-72 rounded-md skeleton-dark"></div>
+            <p v-else class="text-white/80 text-sm">Member since {{ dayjs(user?.created_at).format('MMM D, YYYY') }} · {{ user?.email }}</p>
             <div class="flex flex-wrap gap-3 mt-5">
               <BaseButton variant="accent" size="sm" to="/shop">
                 <ShoppingBag class="w-4 h-4" />
                 Continue Shopping
               </BaseButton>
+              <!-- Notifications -->
+              <div v-if="isLoading" class="h-9 w-44 rounded-xl skeleton-dark"></div>
               <BaseButton
-                v-if="unreadNotifCount > 0"
+                v-else-if="unreadNotifCount > 0"
                 variant="ghost"
                 size="sm"
                 to="/account/notifications"
@@ -201,8 +151,16 @@ const userFullName = computed(() => {
               </div>
               <ChevronRight class="w-4 h-4 text-ink-300 group-hover:text-ink-500 group-hover:translate-x-0.5 transition-all" />
             </div>
-            <p class="text-2xl font-bold text-ink-900">{{ stat.value }}</p>
-            <p class="text-sm text-ink-500">{{ stat.label }}</p>
+            <template v-if="isLoading">
+              <!-- Number skeleton -->
+              <div class="h-8 w-12 rounded-md skeleton mb-1"></div>
+              <!-- Label skeleton -->
+              <div class="h-4 w-20 rounded-md skeleton"></div>
+            </template>
+            <template v-else>
+              <p class="text-2xl font-bold text-ink-900">{{ stat.value }}</p>
+              <p class="text-sm text-ink-500">{{ stat.label }}</p>
+            </template>
           </router-link>
         </div>
 
@@ -288,7 +246,7 @@ const userFullName = computed(() => {
         </div>
 
         <!-- Recommended products -->
-        <div>
+        <div v-if="recommendedProducts.length">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <TrendingUp class="w-5 h-5 text-accent-500" />
@@ -299,30 +257,28 @@ const userFullName = computed(() => {
               <ChevronRight class="w-4 h-4" />
             </BaseButton>
           </div>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <router-link
-              v-for="product in recommended"
+          <Swiper
+            :modules="[FreeMode]"
+            :space-between="16"
+            :free-mode="true"
+            :grab-cursor="true"
+            :free-mode-momentum="true"
+            :breakpoints="{
+            0: {slidesPerView: 1.2},
+            640: {slidesPerView: 3},
+            768: {slidesPerView: 3},
+            1024: {slidesPerView: 4},
+            1280: {slidesPerView: 4}
+          }"
+            class="recommended-swiper"
+          >
+            <SwiperSlide
+              v-for="product in recommendedProducts"
               :key="product.id"
-              :to="`/product/${product.id}`"
-              class="card card-hover overflow-hidden group"
             >
-              <div class="aspect-product overflow-hidden bg-ink-100">
-                <img :src="product.image" :alt="product.name" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              </div>
-              <div class="p-3">
-                <p class="text-xs text-ink-500 mb-0.5">{{ product.brand }}</p>
-                <p class="font-medium text-ink-900 text-sm clamp-2 mb-1.5">{{ product.name }}</p>
-                <div class="flex items-center gap-1.5">
-                  <RatingStars :model-value="product.rating" size="sm" />
-                  <span class="text-xs text-ink-500">({{ product.reviews }})</span>
-                </div>
-                <div class="flex items-center gap-2 mt-2">
-                  <span class="font-bold text-ink-900">{{ formatPrice(product.price) }}</span>
-                  <span v-if="product.oldPrice" class="text-xs text-ink-400 line-through">{{ formatPrice(product.oldPrice) }}</span>
-                </div>
-              </div>
-            </router-link>
-          </div>
+              <ProductCard :product="product" />
+            </SwiperSlide>
+          </Swiper>
         </div>
       </div>
     </div>

@@ -41,4 +41,7 @@ class User extends Authenticatable
             ->withPivot('read_at')
             ->withTimestamps();
     }
+    public function wishlist(){
+        return $this->hasOne(Wishlist::class, 'user_id');
+    }
 }

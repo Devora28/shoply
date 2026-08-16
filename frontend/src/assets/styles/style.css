@@ -117,7 +117,25 @@
     @apply bg-gradient-to-r from-ink-100 to-ink-200 rounded-lg animate-shimmer;
     background-size: 1000px 100%;
   }
+  .skeleton-dark {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.12) 25%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.12) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+  }
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
 
+    100% {
+      background-position: -200% 0;
+    }
+  }
   /* ---- Chips ---- */
   .chip {
     @apply inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium

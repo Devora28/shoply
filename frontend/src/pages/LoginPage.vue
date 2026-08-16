@@ -6,6 +6,8 @@ import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
 import {useAuthStore} from "@/stores/auth.js";
 import {toast} from "vue-sonner";
+import {useTitle} from "@vueuse/core";
+useTitle('Shoply | Auth Page')
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()

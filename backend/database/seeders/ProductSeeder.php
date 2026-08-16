@@ -32,7 +32,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.221,
-                'meta' => json_encode(['chip' => 'A17 Pro', 'display' => '6.7-inch Super Retina XDR', 'camera' => '48MP Main']),
+                'meta' => ['chip' => 'A17 Pro', 'display' => '6.7-inch Super Retina XDR', 'camera' => '48MP Main'],
             ],
             [
                 'brand_id' => 2,
@@ -50,7 +50,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.232,
-                'meta' => json_encode(['chip' => 'Snapdragon 8 Gen 3', 'camera' => '200MP', 'feature' => 'Galaxy AI, S Pen Support']),
+                'meta' => ['chip' => 'Snapdragon 8 Gen 3', 'camera' => '200MP', 'feature' => 'Galaxy AI, S Pen Support'],
             ],
             [
                 'brand_id' => 13,
@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.223,
-                'meta' => json_encode(['chip' => 'Snapdragon 8 Gen 3', 'camera' => 'Leica Summilux Optical Lens', 'charging' => '120W HyperCharge']),
+                'meta' => ['chip' => 'Snapdragon 8 Gen 3', 'camera' => 'Leica Summilux Optical Lens', 'charging' => '120W HyperCharge'],
             ],
             [
                 'brand_id' => 2,
@@ -86,7 +86,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.187,
-                'meta' => json_encode(['chip' => 'Snapdragon 8 Gen 2', 'display' => '3.4-inch Cover Display', 'feature' => 'Flex Hinge, Foldable Design']),
+                'meta' => ['chip' => 'Snapdragon 8 Gen 2', 'display' => '3.4-inch Cover Display', 'feature' => 'Flex Hinge, Foldable Design'],
             ],
             [
                 'brand_id' => 1,
@@ -104,7 +104,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.171,
-                'meta' => json_encode(['chip' => 'A16 Bionic', 'camera' => '48MP Main', 'feature' => 'Dynamic Island, USB-C']),
+                'meta' => ['chip' => 'A16 Bionic', 'camera' => '48MP Main', 'feature' => 'Dynamic Island, USB-C'],
             ],
             [
                 'brand_id' => 2,
@@ -122,7 +122,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.213,
-                'meta' => json_encode(['camera' => '50MP OIS', 'battery' => '5000mAh', 'rating' => 'IP67 Water Resistance']),
+                'meta' => ['camera' => '50MP OIS', 'battery' => '5000mAh', 'rating' => 'IP67 Water Resistance'],
             ],
             [
                 'brand_id' => 13,
@@ -140,7 +140,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.204,
-                'meta' => json_encode(['chip' => 'MediaTek Dimensity 7200-Ultra', 'camera' => '200MP OIS', 'charging' => '120W HyperCharge']),
+                'meta' => ['chip' => 'MediaTek Dimensity 7200-Ultra', 'camera' => '200MP OIS', 'charging' => '120W HyperCharge'],
             ],
             [
                 'brand_id' => 3,
@@ -158,7 +158,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.187,
-                'meta' => json_encode(['display' => '4K HDR OLED 120Hz', 'camera' => 'Exmor T Sensor', 'feature' => 'Real-time Eye AF']),
+                'meta' => ['display' => '4K HDR OLED 120Hz', 'camera' => 'Exmor T Sensor', 'feature' => 'Real-time Eye AF'],
             ],
             [
                 'brand_id' => 13,
@@ -176,7 +176,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.204,
-                'meta' => json_encode(['chip' => 'Snapdragon 8+ Gen 1', 'display' => 'WQHD+ 120Hz AMOLED', 'battery' => '5160mAh']),
+                'meta' => ['chip' => 'Snapdragon 8+ Gen 1', 'display' => 'WQHD+ 120Hz AMOLED', 'battery' => '5160mAh'],
             ],
             [
                 'brand_id' => 17,
@@ -194,7 +194,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.260,
-                'meta' => json_encode(['chip' => 'Snapdragon 765G', 'display' => '6.8-inch Main, 3.9-inch Second Screen', 'feature' => 'Swivel Mode, Gimbal Motion Camera']),
+                'meta' => ['chip' => 'Snapdragon 765G', 'display' => '6.8-inch Main, 3.9-inch Second Screen', 'feature' => 'Swivel Mode, Gimbal Motion Camera'],
             ],
 
             // ==================== 2. LAPTOPS (Category ID: 2) ====================
@@ -214,7 +214,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 2.15,
-                'meta' => json_encode(['chip' => 'M3 Max', 'ram' => '32GB Unified', 'storage' => '1TB SSD', 'display' => 'Liquid Retina XDR']),
+                'meta' => ['chip' => 'M3 Max', 'ram' => '32GB Unified', 'storage' => '1TB SSD', 'display' => 'Liquid Retina XDR'],
             ],
             [
                 'brand_id' => 7,
@@ -232,7 +232,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 1.86,
-                'meta' => json_encode(['cpu' => '13th Gen Intel Core i7', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '32GB', 'storage' => '1TB SSD', 'display' => '15.6-inch 3.5K OLED']),
+                'meta' => ['cpu' => '13th Gen Intel Core i7', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '32GB', 'storage' => '1TB SSD', 'display' => '15.6-inch 3.5K OLED'],
             ],
             [
                 'brand_id' => 9,
@@ -250,7 +250,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.12,
-                'meta' => json_encode(['cpu' => 'Intel Core i7-1355U', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 2.8K OLED', 'feature' => 'MIL-STD-810H Durability']),
+                'meta' => ['cpu' => 'Intel Core i7-1355U', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 2.8K OLED', 'feature' => 'MIL-STD-810H Durability'],
             ],
             [
                 'brand_id' => 8,
@@ -268,7 +268,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.37,
-                'meta' => json_encode(['cpu' => 'Intel Core Ultra 7', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '14-inch 2.8K OLED Touchscreen', 'feature' => '2-in-1 Convertible']),
+                'meta' => ['cpu' => 'Intel Core Ultra 7', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '14-inch 2.8K OLED Touchscreen', 'feature' => '2-in-1 Convertible'],
             ],
             [
                 'brand_id' => 10,
@@ -286,7 +286,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 1.72,
-                'meta' => json_encode(['cpu' => 'AMD Ryzen 9 7940HS', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '14-inch QHD 165Hz', 'feature' => 'AniMe Matrix LED']),
+                'meta' => ['cpu' => 'AMD Ryzen 9 7940HS', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '14-inch QHD 165Hz', 'feature' => 'AniMe Matrix LED'],
             ],
             [
                 'brand_id' => 1,
@@ -304,7 +304,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.51,
-                'meta' => json_encode(['chip' => 'M2', 'ram' => '8GB Unified', 'storage' => '256GB SSD', 'display' => 'Liquid Retina', 'feature' => 'Fanless Design']),
+                'meta' => ['chip' => 'M2', 'ram' => '8GB Unified', 'storage' => '256GB SSD', 'display' => 'Liquid Retina', 'feature' => 'Fanless Design'],
             ],
             [
                 'brand_id' => 20,
@@ -322,7 +322,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.25,
-                'meta' => json_encode(['cpu' => 'Intel Core Ultra 7', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 2.8K OLED 90Hz', 'feature' => 'AI-Powered']),
+                'meta' => ['cpu' => 'Intel Core Ultra 7', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 2.8K OLED 90Hz', 'feature' => 'AI-Powered'],
             ],
             [
                 'brand_id' => 6,
@@ -340,7 +340,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.27,
-                'meta' => json_encode(['cpu' => 'Intel Core i7 Evo', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '13.5-inch PixelSense Touchscreen', 'feature' => 'Alcantara Palm Rest']),
+                'meta' => ['cpu' => 'Intel Core i7 Evo', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '13.5-inch PixelSense Touchscreen', 'feature' => 'Alcantara Palm Rest'],
             ],
             [
                 'brand_id' => 7,
@@ -358,7 +358,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 2.05,
-                'meta' => json_encode(['cpu' => 'Intel Core i7-13700H', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '32GB', 'storage' => '1TB SSD', 'display' => '16-inch 2.5K 120Hz']),
+                'meta' => ['cpu' => 'Intel Core i7-13700H', 'gpu' => 'NVIDIA RTX 4060', 'ram' => '32GB', 'storage' => '1TB SSD', 'display' => '16-inch 2.5K 120Hz'],
             ],
             [
                 'brand_id' => 9,
@@ -376,7 +376,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.40,
-                'meta' => json_encode(['cpu' => 'Intel Core i7-1360P', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 4K OLED Touchscreen', 'feature' => 'Rotating Bowers & Wilkins Soundbar']),
+                'meta' => ['cpu' => 'Intel Core i7-1360P', 'ram' => '16GB', 'storage' => '512GB SSD', 'display' => '14-inch 4K OLED Touchscreen', 'feature' => 'Rotating Bowers & Wilkins Soundbar'],
             ],
 
             // ==================== 3. TABLETS (Category ID: 3) ====================
@@ -396,7 +396,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.682,
-                'meta' => json_encode(['chip' => 'M2', 'display' => 'Liquid Retina XDR', 'feature' => 'ProMotion, Apple Pencil Hover, 5G']),
+                'meta' => ['chip' => 'M2', 'display' => 'Liquid Retina XDR', 'feature' => 'ProMotion, Apple Pencil Hover, 5G'],
             ],
             [
                 'brand_id' => 2,
@@ -414,7 +414,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.732,
-                'meta' => json_encode(['chip' => 'Snapdragon 8 Gen 2', 'display' => '14.6-inch Dynamic AMOLED 2X', 'feature' => 'IP68, S Pen, DeX Mode']),
+                'meta' => ['chip' => 'Snapdragon 8 Gen 2', 'display' => '14.6-inch Dynamic AMOLED 2X', 'feature' => 'IP68, S Pen, DeX Mode'],
             ],
             [
                 'brand_id' => 1,
@@ -432,7 +432,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.462,
-                'meta' => json_encode(['chip' => 'M2', 'display' => 'Liquid Retina', 'feature' => 'Apple Pencil Pro Support, Landscape Front Camera']),
+                'meta' => ['chip' => 'M2', 'display' => 'Liquid Retina', 'feature' => 'Apple Pencil Pro Support, Landscape Front Camera'],
             ],
             [
                 'brand_id' => 6,
@@ -450,7 +450,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.879,
-                'meta' => json_encode(['cpu' => 'Intel Core i7 Evo', 'ram' => '16GB', 'storage' => '256GB SSD', 'display' => '13-inch PixelSense Flow Touchscreen', 'feature' => 'Thunderbolt 4, Optional 5G']),
+                'meta' => ['cpu' => 'Intel Core i7 Evo', 'ram' => '16GB', 'storage' => '256GB SSD', 'display' => '13-inch PixelSense Flow Touchscreen', 'feature' => 'Thunderbolt 4, Optional 5G'],
             ],
             [
                 'brand_id' => 2,
@@ -468,7 +468,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.480,
-                'meta' => json_encode(['chip' => 'Snapdragon 695', 'display' => '11-inch 90Hz', 'feature' => 'Quad Speakers, Samsung Kids Mode']),
+                'meta' => ['chip' => 'Snapdragon 695', 'display' => '11-inch 90Hz', 'feature' => 'Quad Speakers, Samsung Kids Mode'],
             ],
             [
                 'brand_id' => 9,
@@ -486,7 +486,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.565,
-                'meta' => json_encode(['chip' => 'Snapdragon 870', 'display' => '12.6-inch 120Hz AMOLED', 'feature' => 'Quad JBL Speakers, Lenovo Precision Pen 3']),
+                'meta' => ['chip' => 'Snapdragon 870', 'display' => '12.6-inch 120Hz AMOLED', 'feature' => 'Quad JBL Speakers, Lenovo Precision Pen 3'],
             ],
             [
                 'brand_id' => 13,
@@ -504,7 +504,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.490,
-                'meta' => json_encode(['chip' => 'Snapdragon 870', 'display' => '11-inch 144Hz 2.8K', 'feature' => 'Quad Dolby Atmos Speakers, 8840mAh Battery']),
+                'meta' => ['chip' => 'Snapdragon 870', 'display' => '11-inch 144Hz 2.8K', 'feature' => 'Quad Dolby Atmos Speakers, 8840mAh Battery'],
             ],
             [
                 'brand_id' => 1,
@@ -522,7 +522,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.477,
-                'meta' => json_encode(['chip' => 'A14 Bionic', 'display' => '10.9-inch Liquid Retina', 'feature' => 'USB-C, Magic Keyboard Folio Support']),
+                'meta' => ['chip' => 'A14 Bionic', 'display' => '10.9-inch Liquid Retina', 'feature' => 'USB-C, Magic Keyboard Folio Support'],
             ],
 
             // ==================== 4. HEADPHONES (Category ID: 4) ====================
@@ -542,7 +542,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.250,
-                'meta' => json_encode(['type' => 'Over-Ear', 'connectivity' => 'Wireless', 'battery' => '30 Hours', 'feature' => 'Active Noise Cancellation']),
+                'meta' => ['type' => 'Over-Ear', 'connectivity' => 'Wireless', 'battery' => '30 Hours', 'feature' => 'Active Noise Cancellation'],
             ],
             [
                 'brand_id' => 1,
@@ -560,7 +560,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.054,
-                'meta' => json_encode(['type' => 'In-Ear', 'chip' => 'Apple H2', 'feature' => '2x Active Noise Cancellation, Adaptive Transparency, Personalized Spatial Audio']),
+                'meta' => ['type' => 'In-Ear', 'chip' => 'Apple H2', 'feature' => '2x Active Noise Cancellation, Adaptive Transparency, Personalized Spatial Audio'],
             ],
             [
                 'brand_id' => 15,
@@ -578,7 +578,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.254,
-                'meta' => json_encode(['type' => 'Over-Ear', 'battery' => '24 Hours', 'feature' => 'Immersive Audio, CustomTune Technology']),
+                'meta' => ['type' => 'Over-Ear', 'battery' => '24 Hours', 'feature' => 'Immersive Audio, CustomTune Technology'],
             ],
             [
                 'brand_id' => 14,
@@ -596,7 +596,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.278,
-                'meta' => json_encode(['type' => 'Over-Ear', 'battery' => '50 Hours', 'feature' => 'True Adaptive ANC, JBL Pro Audio, Spatial 360 Sound']),
+                'meta' => ['type' => 'Over-Ear', 'battery' => '50 Hours', 'feature' => 'True Adaptive ANC, JBL Pro Audio, Spatial 360 Sound'],
             ],
             [
                 'brand_id' => 3,
@@ -614,7 +614,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.048,
-                'meta' => json_encode(['type' => 'In-Ear', 'battery' => '8 Hours', 'feature' => 'Hi-Res Audio, Dynamic Driver X, IPX4']),
+                'meta' => ['type' => 'In-Ear', 'battery' => '8 Hours', 'feature' => 'Hi-Res Audio, Dynamic Driver X, IPX4'],
             ],
             [
                 'brand_id' => 14,
@@ -632,7 +632,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.232,
-                'meta' => json_encode(['type' => 'Over-Ear', 'battery' => '44 Hours', 'feature' => 'Adaptive Noise Cancelling, JBL Pure Bass Sound']),
+                'meta' => ['type' => 'Over-Ear', 'battery' => '44 Hours', 'feature' => 'Adaptive Noise Cancelling, JBL Pure Bass Sound'],
             ],
             [
                 'brand_id' => 15,
@@ -650,7 +650,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.063,
-                'meta' => json_encode(['type' => 'In-Ear', 'feature' => 'CustomTune Sound Calibration, World-Leading ANC, Aware Mode, IPX4']),
+                'meta' => ['type' => 'In-Ear', 'feature' => 'CustomTune Sound Calibration, World-Leading ANC, Aware Mode, IPX4'],
             ],
             [
                 'brand_id' => 1,
@@ -668,7 +668,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.385,
-                'meta' => json_encode(['type' => 'Over-Ear', 'chip' => 'Apple H1', 'feature' => 'Active Noise Cancellation, Transparency Mode, Spatial Audio']),
+                'meta' => ['type' => 'Over-Ear', 'chip' => 'Apple H1', 'feature' => 'Active Noise Cancellation, Transparency Mode, Spatial Audio'],
             ],
 
             // ==================== 5. SMART WATCHES (Category ID: 5) ====================
@@ -688,7 +688,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.051,
-                'meta' => json_encode(['chip' => 'S9', 'display' => 'Always-On Retina', 'feature' => 'Double Tap Gesture, ECG, Blood Oxygen']),
+                'meta' => ['chip' => 'S9', 'display' => 'Always-On Retina', 'feature' => 'Double Tap Gesture, ECG, Blood Oxygen'],
             ],
             [
                 'brand_id' => 2,
@@ -706,7 +706,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.052,
-                'meta' => json_encode(['os' => 'Wear OS', 'display' => 'Super AMOLED', 'feature' => 'Rotating Bezel, Advanced Sleep Coaching, BioActive Sensor']),
+                'meta' => ['os' => 'Wear OS', 'display' => 'Super AMOLED', 'feature' => 'Rotating Bezel, Advanced Sleep Coaching, BioActive Sensor'],
             ],
             [
                 'brand_id' => 1,
@@ -724,7 +724,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.061,
-                'meta' => json_encode(['chip' => 'S9', 'display' => '3000-nit Retina', 'battery' => '36 Hours', 'feature' => 'Dual-Frequency GPS, Action Button, Depth Gauge']),
+                'meta' => ['chip' => 'S9', 'display' => '3000-nit Retina', 'battery' => '36 Hours', 'feature' => 'Dual-Frequency GPS, Action Button, Depth Gauge'],
             ],
             [
                 'brand_id' => 13,
@@ -742,7 +742,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.055,
-                'meta' => json_encode(['os' => 'Wear OS', 'display' => 'AMOLED', 'battery' => '65 Hours', 'feature' => 'Dual-Band GPS, Body Composition Analysis']),
+                'meta' => ['os' => 'Wear OS', 'display' => 'AMOLED', 'battery' => '65 Hours', 'feature' => 'Dual-Band GPS, Body Composition Analysis'],
             ],
             [
                 'brand_id' => 2,
@@ -760,7 +760,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.037,
-                'meta' => json_encode(['os' => 'Wear OS', 'display' => 'Sapphire Crystal', 'feature' => 'BioActive Sensor, Sleep & Heart Rate Monitoring']),
+                'meta' => ['os' => 'Wear OS', 'display' => 'Sapphire Crystal', 'feature' => 'BioActive Sensor, Sleep & Heart Rate Monitoring'],
             ],
             [
                 'brand_id' => 17,
@@ -778,7 +778,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.079,
-                'meta' => json_encode(['os' => 'Wear OS', 'display' => '1.39-inch AMOLED', 'storage' => '4GB', 'feature' => 'Hybrid Design, Mechanical Hands, IP68']),
+                'meta' => ['os' => 'Wear OS', 'display' => '1.39-inch AMOLED', 'storage' => '4GB', 'feature' => 'Hybrid Design, Mechanical Hands, IP68'],
             ],
             [
                 'brand_id' => 3,
@@ -796,7 +796,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.048,
-                'meta' => json_encode(['os' => 'Wear OS', 'chip' => 'Snapdragon Wear 4100+', 'display' => '1.4-inch OLED', 'feature' => 'GPS, NFC, 5ATM, Sony Audio Integration']),
+                'meta' => ['os' => 'Wear OS', 'chip' => 'Snapdragon Wear 4100+', 'display' => '1.4-inch OLED', 'feature' => 'GPS, NFC, 5ATM, Sony Audio Integration'],
             ],
 
             // ==================== 6. CAMERAS (Category ID: 6) ====================
@@ -816,7 +816,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.658,
-                'meta' => json_encode(['type' => 'Mirrorless Full-Frame', 'sensor' => '33MP Exmor R', 'video' => '4K 60p', 'feature' => 'Real-time Eye AF, 5-axis Stabilization']),
+                'meta' => ['type' => 'Mirrorless Full-Frame', 'sensor' => '33MP Exmor R', 'video' => '4K 60p', 'feature' => 'Real-time Eye AF, 5-axis Stabilization'],
             ],
             [
                 'brand_id' => 11,
@@ -834,7 +834,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.670,
-                'meta' => json_encode(['type' => 'Mirrorless Full-Frame', 'sensor' => '24.2MP', 'shooting' => '40fps Electronic Shutter', 'video' => '6K Oversampled 4K 60p', 'feature' => '8-stop IBIS']),
+                'meta' => ['type' => 'Mirrorless Full-Frame', 'sensor' => '24.2MP', 'shooting' => '40fps Electronic Shutter', 'video' => '6K Oversampled 4K 60p', 'feature' => '8-stop IBIS'],
             ],
             [
                 'brand_id' => 3,
@@ -852,7 +852,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.483,
-                'meta' => json_encode(['type' => 'Vlog Full-Frame', 'sensor' => '12.1MP', 'video' => '4K 120p', 'feature' => 'AI Auto Framing, Cinematic Vlog Setting, Dynamic Active Mode']),
+                'meta' => ['type' => 'Vlog Full-Frame', 'sensor' => '12.1MP', 'video' => '4K 120p', 'feature' => 'AI Auto Framing, Cinematic Vlog Setting, Dynamic Active Mode'],
             ],
             [
                 'brand_id' => 11,
@@ -870,7 +870,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.375,
-                'meta' => json_encode(['type' => 'Mirrorless APS-C', 'sensor' => '24.2MP', 'video' => '4K 30p', 'shooting' => '15fps']),
+                'meta' => ['type' => 'Mirrorless APS-C', 'sensor' => '24.2MP', 'video' => '4K 30p', 'shooting' => '15fps'],
             ],
             [
                 'brand_id' => 11,
@@ -888,7 +888,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.900,
-                'meta' => json_encode(['type' => 'Zoom Lens', 'mount' => 'Canon RF', 'aperture' => 'f/2.8', 'feature' => '5-stop Optical IS, Nano USM, Weather-Sealed']),
+                'meta' => ['type' => 'Zoom Lens', 'mount' => 'Canon RF', 'aperture' => 'f/2.8', 'feature' => '5-stop Optical IS, Nano USM, Weather-Sealed'],
             ],
             [
                 'brand_id' => 3,
@@ -906,7 +906,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.045,
-                'meta' => json_encode(['type' => 'Telephoto Zoom Lens', 'mount' => 'Sony E', 'aperture' => 'f/2.8', 'feature' => 'XD Linear Motors, 4-axis Stabilization, Lightweight 1.045kg']),
+                'meta' => ['type' => 'Telephoto Zoom Lens', 'mount' => 'Sony E', 'aperture' => 'f/2.8', 'feature' => 'XD Linear Motors, 4-axis Stabilization, Lightweight 1.045kg'],
             ],
             [
                 'brand_id' => 3,
@@ -924,7 +924,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.302,
-                'meta' => json_encode(['type' => 'Premium Compact', 'sensor' => '20.1MP 1-inch', 'lens' => '24-200mm Zoom', 'feature' => '20fps Blackout-Free Shooting, Real-time Tracking']),
+                'meta' => ['type' => 'Premium Compact', 'sensor' => '20.1MP 1-inch', 'lens' => '24-200mm Zoom', 'feature' => '20fps Blackout-Free Shooting, Real-time Tracking'],
             ],
 
             // ==================== 7. GAMING (Category ID: 7) ====================
@@ -944,7 +944,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 3.20,
-                'meta' => json_encode(['storage' => '1TB SSD', 'gaming' => '4K up to 120fps', 'feature' => 'Ray Tracing, DualSense Controller, Tempest 3D AudioTech']),
+                'meta' => ['storage' => '1TB SSD', 'gaming' => '4K up to 120fps', 'feature' => 'Ray Tracing, DualSense Controller, Tempest 3D AudioTech'],
             ],
             [
                 'brand_id' => 6,
@@ -962,7 +962,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 4.44,
-                'meta' => json_encode(['gpu' => '12 TFLOPS', 'storage' => '1TB SSD', 'gaming' => '4K up to 120fps', 'feature' => 'Dolby Vision, Dolby Atmos, Backward Compatibility']),
+                'meta' => ['gpu' => '12 TFLOPS', 'storage' => '1TB SSD', 'gaming' => '4K up to 120fps', 'feature' => 'Dolby Vision, Dolby Atmos, Backward Compatibility'],
             ],
             [
                 'brand_id' => 10,
@@ -980,7 +980,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.608,
-                'meta' => json_encode(['cpu' => 'AMD Ryzen Z1 Extreme', 'storage' => '512GB SSD', 'display' => '7-inch 1080p 120Hz', 'os' => 'Windows 11']),
+                'meta' => ['cpu' => 'AMD Ryzen Z1 Extreme', 'storage' => '512GB SSD', 'display' => '7-inch 1080p 120Hz', 'os' => 'Windows 11'],
             ],
             [
                 'brand_id' => 19,
@@ -998,7 +998,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 2.01,
-                'meta' => json_encode(['cpu' => 'Intel Core i7-13800H', 'gpu' => 'NVIDIA RTX 4070', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '15.6-inch QHD 240Hz', 'feature' => 'Per-Key RGB Chroma']),
+                'meta' => ['cpu' => 'Intel Core i7-13800H', 'gpu' => 'NVIDIA RTX 4070', 'ram' => '16GB', 'storage' => '1TB SSD', 'display' => '15.6-inch QHD 240Hz', 'feature' => 'Per-Key RGB Chroma'],
             ],
             [
                 'brand_id' => 19,
@@ -1016,7 +1016,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.112,
-                'meta' => json_encode(['type' => 'Wireless', 'sensor' => 'Focus Pro 30K Optical', 'battery' => '90 Hours', 'feature' => 'HyperScroll Tilt Wheel, 13-zone Chroma']),
+                'meta' => ['type' => 'Wireless', 'sensor' => 'Focus Pro 30K Optical', 'battery' => '90 Hours', 'feature' => 'HyperScroll Tilt Wheel, 13-zone Chroma'],
             ],
             [
                 'brand_id' => 19,
@@ -1034,7 +1034,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.320,
-                'meta' => json_encode(['type' => 'Wireless', 'drivers' => 'Triforce Titanium 50mm', 'battery' => '70 Hours', 'weight_g' => 320, 'mic' => 'HyperClear Super Wideband']),
+                'meta' => ['type' => 'Wireless', 'drivers' => 'Triforce Titanium 50mm', 'battery' => '70 Hours', 'weight_g' => 320, 'mic' => 'HyperClear Super Wideband'],
             ],
             [
                 'brand_id' => 10,
@@ -1052,7 +1052,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 8.30,
-                'meta' => json_encode(['size' => '27-inch', 'panel' => 'OLED', 'resolution' => '1440p', 'refresh_rate' => '240Hz', 'response' => '0.03ms', 'feature' => 'G-Sync Compatible']),
+                'meta' => ['size' => '27-inch', 'panel' => 'OLED', 'resolution' => '1440p', 'refresh_rate' => '240Hz', 'response' => '0.03ms', 'feature' => 'G-Sync Compatible'],
             ],
             [
                 'brand_id' => 12,
@@ -1070,7 +1070,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.060,
-                'meta' => json_encode(['type' => 'Wireless', 'weight_g' => 60, 'sensor' => 'HERO 2', 'battery' => '95 Hours', 'feature' => 'LIGHTFORCE Hybrid Switches']),
+                'meta' => ['type' => 'Wireless', 'weight_g' => 60, 'sensor' => 'HERO 2', 'battery' => '95 Hours', 'feature' => 'LIGHTFORCE Hybrid Switches'],
             ],
 
             // ==================== 8. ACCESSORIES (Category ID: 8) ====================
@@ -1090,7 +1090,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.045,
-                'meta' => json_encode(['type' => 'Wireless Charger', 'power' => '15W', 'compatibility' => 'iPhone 15/14 Series, Qi2']),
+                'meta' => ['type' => 'Wireless Charger', 'power' => '15W', 'compatibility' => 'iPhone 15/14 Series, Qi2'],
             ],
             [
                 'brand_id' => 12,
@@ -1108,7 +1108,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.162,
-                'meta' => json_encode(['type' => 'Webcam', 'resolution' => '1080p 30fps', 'feature' => 'Privacy Shutter, Dual Stereo Mics, Auto Light Correction']),
+                'meta' => ['type' => 'Webcam', 'resolution' => '1080p 30fps', 'feature' => 'Privacy Shutter, Dual Stereo Mics, Auto Light Correction'],
             ],
             [
                 'brand_id' => 1,
@@ -1126,7 +1126,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.044,
-                'meta' => json_encode(['type' => 'Item Tracker', 'feature' => 'Precision Finding, Find My Network, IP67, User-Replaceable Battery']),
+                'meta' => ['type' => 'Item Tracker', 'feature' => 'Precision Finding, Find My Network, IP67, User-Replaceable Battery'],
             ],
             [
                 'brand_id' => 12,
@@ -1144,7 +1144,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.141,
-                'meta' => json_encode(['type' => 'Wireless Mouse', 'dpi' => '8000', 'feature' => 'Quiet Clicks, MagSpeed Scroll Wheel, Multi-Device Flow']),
+                'meta' => ['type' => 'Wireless Mouse', 'dpi' => '8000', 'feature' => 'Quiet Clicks, MagSpeed Scroll Wheel, Multi-Device Flow'],
             ],
             [
                 'brand_id' => 1,
@@ -1162,7 +1162,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.020,
-                'meta' => json_encode(['type' => 'Charging Cable', 'length' => '1m', 'feature' => 'USB-C to Lightning, MFi Certified, Fast Charging']),
+                'meta' => ['type' => 'Charging Cable', 'length' => '1m', 'feature' => 'USB-C to Lightning, MFi Certified, Fast Charging'],
             ],
             [
                 'brand_id' => 19,
@@ -1180,7 +1180,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.132,
-                'meta' => json_encode(['type' => 'Charging Dock', 'feature' => 'Integrated 4000Hz Transceiver, Magnetic Charging, Chroma RGB']),
+                'meta' => ['type' => 'Charging Dock', 'feature' => 'Integrated 4000Hz Transceiver, Magnetic Charging, Chroma RGB'],
             ],
 
             // ==================== 9. MONITORS (Category ID: 9) ====================
@@ -1200,7 +1200,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 7.50,
-                'meta' => json_encode(['size' => '32-inch', 'panel' => 'VA Curved', 'resolution' => '4K UHD', 'refresh_rate' => '240Hz', 'hdr' => 'Quantum Matrix HDR2000', 'feature' => 'AMD FreeSync Premium Pro']),
+                'meta' => ['size' => '32-inch', 'panel' => 'VA Curved', 'resolution' => '4K UHD', 'refresh_rate' => '240Hz', 'hdr' => 'Quantum Matrix HDR2000', 'feature' => 'AMD FreeSync Premium Pro'],
             ],
             [
                 'brand_id' => 7,
@@ -1218,7 +1218,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 6.60,
-                'meta' => json_encode(['size' => '27-inch', 'panel' => 'IPS Black', 'resolution' => '4K', 'feature' => 'USB-C Hub, 98% DCI-P3, Built-in KVM']),
+                'meta' => ['size' => '27-inch', 'panel' => 'IPS Black', 'resolution' => '4K', 'feature' => 'USB-C Hub, 98% DCI-P3, Built-in KVM'],
             ],
             [
                 'brand_id' => 17,
@@ -1236,7 +1236,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 8.30,
-                'meta' => json_encode(['size' => '27-inch', 'panel' => 'IPS 5K', 'resolution' => '5120x2880', 'feature' => 'Thunderbolt 3, DCI-P3 99%, Built-in Camera & Speakers']),
+                'meta' => ['size' => '27-inch', 'panel' => 'IPS 5K', 'resolution' => '5120x2880', 'feature' => 'Thunderbolt 3, DCI-P3 99%, Built-in Camera & Speakers'],
             ],
             [
                 'brand_id' => 10,
@@ -1254,7 +1254,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 5.80,
-                'meta' => json_encode(['size' => '27-inch', 'panel' => 'IPS', 'resolution' => '4K', 'feature' => 'Delta E < 2, 99% DCI-P3, USB-C 96W PD, Calman Verified']),
+                'meta' => ['size' => '27-inch', 'panel' => 'IPS', 'resolution' => '4K', 'feature' => 'Delta E < 2, 99% DCI-P3, USB-C 96W PD, Calman Verified'],
             ],
             [
                 'brand_id' => 20,
@@ -1272,7 +1272,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 9.20,
-                'meta' => json_encode(['size' => '32-inch', 'panel' => 'Mini-LED', 'resolution' => '4K UHD', 'refresh_rate' => '160Hz', 'hdr' => 'DisplayHDR 1000', 'feature' => '576 Zones, HDMI 2.1']),
+                'meta' => ['size' => '32-inch', 'panel' => 'Mini-LED', 'resolution' => '4K UHD', 'refresh_rate' => '160Hz', 'hdr' => 'DisplayHDR 1000', 'feature' => '576 Zones, HDMI 2.1'],
             ],
 
             // ==================== 10. KEYBOARDS (Category ID: 10) ====================
@@ -1292,7 +1292,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.810,
-                'meta' => json_encode(['type' => 'Wireless', 'layout' => 'QWERTY', 'feature' => 'Smart Illumination, Logi Bolt, Multi-Device, USB-C Charging']),
+                'meta' => ['type' => 'Wireless', 'layout' => 'QWERTY', 'feature' => 'Smart Illumination, Logi Bolt, Multi-Device, USB-C Charging'],
             ],
             [
                 'brand_id' => 19,
@@ -1310,7 +1310,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.120,
-                'meta' => json_encode(['type' => 'Mechanical Gaming', 'switch' => 'Razer Green', 'feature' => 'Chroma RGB, Command Dial, 8000Hz Polling Rate']),
+                'meta' => ['type' => 'Mechanical Gaming', 'switch' => 'Razer Green', 'feature' => 'Chroma RGB, Command Dial, 8000Hz Polling Rate'],
             ],
             [
                 'brand_id' => 1,
@@ -1328,7 +1328,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.390,
-                'meta' => json_encode(['type' => 'Wireless', 'layout' => 'QWERTY', 'feature' => 'Numeric Keypad, Scissor Mechanism, Rechargeable Battery']),
+                'meta' => ['type' => 'Wireless', 'layout' => 'QWERTY', 'feature' => 'Numeric Keypad, Scissor Mechanism, Rechargeable Battery'],
             ],
             [
                 'brand_id' => 12,
@@ -1346,7 +1346,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.810,
-                'meta' => json_encode(['type' => 'Wireless Mechanical Gaming', 'switch' => 'GL Tactile', 'battery' => '40 Hours', 'feature' => 'Low-Profile, LIGHTSYNC RGB, Aircraft-Grade Aluminum']),
+                'meta' => ['type' => 'Wireless Mechanical Gaming', 'switch' => 'GL Tactile', 'battery' => '40 Hours', 'feature' => 'Low-Profile, LIGHTSYNC RGB, Aircraft-Grade Aluminum'],
             ],
 
             // ==================== 11. MICE (Category ID: 11) ====================
@@ -1366,7 +1366,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.135,
-                'meta' => json_encode(['type' => 'Wireless Ergonomic', 'dpi' => '4000', 'feature' => '57° Vertical Angle, USB-C Fast Charging, Multi-Device']),
+                'meta' => ['type' => 'Wireless Ergonomic', 'dpi' => '4000', 'feature' => '57° Vertical Angle, USB-C Fast Charging, Multi-Device'],
             ],
             [
                 'brand_id' => 1,
@@ -1384,7 +1384,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.099,
-                'meta' => json_encode(['type' => 'Wireless', 'feature' => 'Multi-Touch Surface, Bluetooth, Rechargeable']),
+                'meta' => ['type' => 'Wireless', 'feature' => 'Multi-Touch Surface, Bluetooth, Rechargeable'],
             ],
             [
                 'brand_id' => 19,
@@ -1402,7 +1402,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.059,
-                'meta' => json_encode(['type' => 'Wired Gaming', 'weight_g' => 59, 'sensor' => 'Focus Pro 30K Optical', 'polling_rate' => '8000Hz']),
+                'meta' => ['type' => 'Wired Gaming', 'weight_g' => 59, 'sensor' => 'Focus Pro 30K Optical', 'polling_rate' => '8000Hz'],
             ],
 
             // ==================== 12. SPEAKERS (Category ID: 12) ====================
@@ -1422,7 +1422,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.960,
-                'meta' => json_encode(['type' => 'Portable Bluetooth', 'battery' => '20 Hours', 'rating' => 'IP67 Waterproof', 'feature' => 'Built-in Powerbank, PartyBoost']),
+                'meta' => ['type' => 'Portable Bluetooth', 'battery' => '20 Hours', 'rating' => 'IP67 Waterproof', 'feature' => 'Built-in Powerbank, PartyBoost'],
             ],
             [
                 'brand_id' => 15,
@@ -1440,7 +1440,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.540,
-                'meta' => json_encode(['type' => 'Portable Bluetooth', 'battery' => '12 Hours', 'feature' => 'PositionIQ Technology, Rugged Design, Built-in Mic']),
+                'meta' => ['type' => 'Portable Bluetooth', 'battery' => '12 Hours', 'feature' => 'PositionIQ Technology, Rugged Design, Built-in Mic'],
             ],
             [
                 'brand_id' => 3,
@@ -1458,7 +1458,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.274,
-                'meta' => json_encode(['type' => 'Ultra-Portable Bluetooth', 'battery' => '16 Hours', 'rating' => 'IP67', 'feature' => 'Sound Diffusion Processor, Strap Included']),
+                'meta' => ['type' => 'Ultra-Portable Bluetooth', 'battery' => '16 Hours', 'rating' => 'IP67', 'feature' => 'Sound Diffusion Processor, Strap Included'],
             ],
             [
                 'brand_id' => 14,
@@ -1476,7 +1476,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 17.40,
-                'meta' => json_encode(['type' => 'Party Speaker', 'power' => '240W', 'battery' => '18 Hours', 'feature' => 'Dynamic Light Show, Guitar & Mic Inputs, Splashproof']),
+                'meta' => ['type' => 'Party Speaker', 'power' => '240W', 'battery' => '18 Hours', 'feature' => 'Dynamic Light Show, Guitar & Mic Inputs, Splashproof'],
             ],
 
             // ==================== 13. TELEVISIONS (Category ID: 13) ====================
@@ -1496,7 +1496,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 24.50,
-                'meta' => json_encode(['size' => '65-inch', 'panel' => 'Neo QLED', 'resolution' => '4K', 'feature' => 'Quantum Matrix, Neural Quantum Processor 4K, Dolby Atmos']),
+                'meta' => ['size' => '65-inch', 'panel' => 'Neo QLED', 'resolution' => '4K', 'feature' => 'Quantum Matrix, Neural Quantum Processor 4K, Dolby Atmos'],
             ],
             [
                 'brand_id' => 17,
@@ -1514,7 +1514,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 17.80,
-                'meta' => json_encode(['size' => '55-inch', 'panel' => 'OLED evo', 'resolution' => '4K', 'feature' => 'α9 Gen6 AI Processor, Dolby Vision, G-Sync, 120Hz']),
+                'meta' => ['size' => '55-inch', 'panel' => 'OLED evo', 'resolution' => '4K', 'feature' => 'α9 Gen6 AI Processor, Dolby Vision, G-Sync, 120Hz'],
             ],
             [
                 'brand_id' => 3,
@@ -1532,7 +1532,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 23.30,
-                'meta' => json_encode(['size' => '65-inch', 'panel' => 'OLED', 'resolution' => '4K', 'feature' => 'Cognitive Processor XR, Acoustic Surface Audio+, Google TV']),
+                'meta' => ['size' => '65-inch', 'panel' => 'OLED', 'resolution' => '4K', 'feature' => 'Cognitive Processor XR, Acoustic Surface Audio+, Google TV'],
             ],
             [
                 'brand_id' => 18,
@@ -1550,7 +1550,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 20.40,
-                'meta' => json_encode(['size' => '55-inch', 'panel' => 'META OLED', 'resolution' => '4K', 'feature' => 'Ambilight, P5 AI Processor, Bowers & Wilkins Sound, 144Hz VRR']),
+                'meta' => ['size' => '55-inch', 'panel' => 'META OLED', 'resolution' => '4K', 'feature' => 'Ambilight, P5 AI Processor, Bowers & Wilkins Sound, 144Hz VRR'],
             ],
 
             // ==================== 14. NETWORKING (Category ID: 14) ====================
@@ -1570,7 +1570,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 1.02,
-                'meta' => json_encode(['standard' => 'WiFi 6', 'speed' => '6000Mbps', 'feature' => 'Dual 2.5G Ports, AiMesh, AiProtection Pro, VPN Fusion']),
+                'meta' => ['standard' => 'WiFi 6', 'speed' => '6000Mbps', 'feature' => 'Dual 2.5G Ports, AiMesh, AiProtection Pro, VPN Fusion'],
             ],
             [
                 'brand_id' => 8,
@@ -1588,7 +1588,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.380,
-                'meta' => json_encode(['standard' => 'WiFi 6', 'speed' => '1774Mbps', 'feature' => 'OFDMA, MU-MIMO, Easy App Management, Business-Grade Security']),
+                'meta' => ['standard' => 'WiFi 6', 'speed' => '1774Mbps', 'feature' => 'OFDMA, MU-MIMO, Easy App Management, Business-Grade Security'],
             ],
             [
                 'brand_id' => 9,
@@ -1606,7 +1606,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.540,
-                'meta' => json_encode(['standard' => 'WiFi 6', 'speed' => '3000Mbps', 'feature' => 'Mesh Support, Easy App Setup, 4x Gigabit LAN']),
+                'meta' => ['standard' => 'WiFi 6', 'speed' => '3000Mbps', 'feature' => 'Mesh Support, Easy App Setup, 4x Gigabit LAN'],
             ],
             [
                 'brand_id' => 6,
@@ -1624,7 +1624,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.118,
-                'meta' => json_encode(['ports' => 'Ethernet, USB-A, USB-C, HDMI, VGA', 'feature' => 'Compact Design, For Surface Devices']),
+                'meta' => ['ports' => 'Ethernet, USB-A, USB-C, HDMI, VGA', 'feature' => 'Compact Design, For Surface Devices'],
             ],
 
             // ==================== 15. WEARABLES (Category ID: 15) ====================
@@ -1644,7 +1644,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.021,
-                'meta' => json_encode(['type' => 'Fitness Tracker', 'display' => '1.6-inch AMOLED', 'battery' => '13 Days', 'rating' => '5ATM', 'feature' => 'Sleep Coaching, Heart Rate Monitoring']),
+                'meta' => ['type' => 'Fitness Tracker', 'display' => '1.6-inch AMOLED', 'battery' => '13 Days', 'rating' => '5ATM', 'feature' => 'Sleep Coaching, Heart Rate Monitoring'],
             ],
             [
                 'brand_id' => 16,
@@ -1662,7 +1662,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.048,
-                'meta' => json_encode(['type' => 'Smartwatch', 'os' => 'Wear OS', 'chip' => 'Snapdragon Wear 4100', 'feature' => 'GPS, NFC, 5ATM, Sports-Inspired Design']),
+                'meta' => ['type' => 'Smartwatch', 'os' => 'Wear OS', 'chip' => 'Snapdragon Wear 4100', 'feature' => 'GPS, NFC, 5ATM, Sports-Inspired Design'],
             ],
             [
                 'brand_id' => 4,
@@ -1680,7 +1680,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.028,
-                'meta' => json_encode(['type' => 'Watch Band', 'material' => 'Fluoroelastomer', 'compatibility' => 'Apple Watch 42/44/45/49mm', 'feature' => 'Compression-Molded Perforations']),
+                'meta' => ['type' => 'Watch Band', 'material' => 'Fluoroelastomer', 'compatibility' => 'Apple Watch 42/44/45/49mm', 'feature' => 'Compression-Molded Perforations'],
             ],
             [
                 'brand_id' => 2,
@@ -1698,7 +1698,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => true,
                 'is_active' => true,
                 'weight' => 0.003,
-                'meta' => json_encode(['type' => 'Smart Ring', 'material' => 'Titanium Grade 5', 'battery' => '7 Days', 'feature' => 'Samsung Health AI, Sleep Tracking, Heart Rate Monitor, Skin Temperature Sensor']),
+                'meta' => ['type' => 'Smart Ring', 'material' => 'Titanium Grade 5', 'battery' => '7 Days', 'feature' => 'Samsung Health AI, Sleep Tracking, Heart Rate Monitor, Skin Temperature Sensor'],
             ],
             [
                 'brand_id' => 5,
@@ -1716,7 +1716,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.072,
-                'meta' => json_encode(['type' => 'Armband', 'feature' => 'Universal Fit, Reflective Detailing, Key Pocket, Sweat-Resistant']),
+                'meta' => ['type' => 'Armband', 'feature' => 'Universal Fit, Reflective Detailing, Key Pocket, Sweat-Resistant'],
             ],
             [
                 'brand_id' => 16,
@@ -1734,7 +1734,7 @@ class ProductSeeder extends Seeder
                 'is_featured' => false,
                 'is_active' => true,
                 'weight' => 0.018,
-                'meta' => json_encode(['type' => 'Fitness Band', 'display' => 'OLED', 'battery' => '7 Days', 'rating' => '3ATM', 'feature' => 'Step & Calorie Tracking, Sleep Monitoring']),
+                'meta' => ['type' => 'Fitness Band', 'display' => 'OLED', 'battery' => '7 Days', 'rating' => '3ATM', 'feature' => 'Step & Calorie Tracking, Sleep Monitoring'],
             ],
         ];
         foreach ($products as $product) {
@@ -1746,9 +1746,6 @@ class ProductSeeder extends Seeder
             }
             if (!isset($product['is_active'])) {
                 $product['is_active'] = true;
-            }
-            if (isset($product['meta']) && is_array($product['meta'])) {
-                $product['meta'] = json_encode($product['meta']);
             }
 
             Product::create($product);

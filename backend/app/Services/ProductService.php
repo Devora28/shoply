@@ -2,6 +2,7 @@
 namespace App\Services;
 use App\Http\Resources\ProductCardResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductReviewResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 class ProductService{
@@ -30,9 +31,12 @@ class ProductService{
         switch($request->query('review_sort')){
             case 'helpful': $query->orderBy('helpful_count','DESC');
             break;
-            case 'newest': $query->orderBy('created_at','DESC');
-            break;
             case 'oldest': $query->orderBy('created_at','ASC');
+            break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'DESC');
+                break;
         }
         switch($request->query('review_filter')){
             case '5': $query->where('rating','5');
@@ -44,7 +48,7 @@ class ProductService{
             case 'verified': $query->where('is_verified_purchase',true);
             break;
         }
-        $reviews = $query->latest()->cursorPaginate(5);
+        $reviews = $query->cursorPaginate(5);
         $stats = $product->reviews()
             ->selectRaw('
             COUNT(*) as total,
@@ -57,7 +61,12 @@ class ProductService{
         ')
             ->first();
         return [
-            'reviews' => $reviews,
+            'reviews' => [
+                'data' => ProductReviewResource::collection($reviews->items()),
+                'next_cursor' => $reviews->nextCursor()?->encode(),
+                'prev_cursor' => $reviews->previousCursor()?->encode(),
+                'per_page' => $reviews->perPage(),
+            ],
             'summary' => [
                 'average' => (float) $stats->average,
                 'total' => (int) $stats->total,

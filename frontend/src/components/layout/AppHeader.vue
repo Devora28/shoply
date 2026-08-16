@@ -222,13 +222,13 @@ const sliceWord = computed(() => {
                   <div class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold">{{sliceWord}}</div>
                   <div>
                     <p class="font-semibold text-ink-900" :title="
-                    `${authStore.user?.first_name} ${authStore.user?.last_name}`">{{displayName}}
+                    `${authStore.user?.first_name} ${authStore.user?.last_name}`">{{displayName ?? 'Shoply User'}}
                     </p>
                     <p class="text-xs text-ink-500" :title="authStore.user?.email">{{displayMail}}</p>
                   </div>
                 </div>
                 <div class="py-2">
-                  <router-link :to="{name: 'profile.dashboard'}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">
+                  <router-link :to="{name: 'account.dashboard'}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">
                     <Package class="w-4 h-4 text-ink-400" /> Dashboard
                   </router-link>
                   <router-link to="/account/orders" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50" @click="showProfileDropdown = false">

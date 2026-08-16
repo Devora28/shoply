@@ -4,7 +4,8 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import ProductDetails from "@/pages/ProductDetails.vue";
-import ProfileDashboard from "@/pages/user/ProfileDashboard.vue";
+import AccountDashboard from "@/pages/account/AccountDashboard.vue";
+import AccountInformation from "@/pages/account/AccountInformation.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +23,8 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: HomePage
+          component: HomePage,
+          meta: {title: 'Home'}
         },
         {
           path: 'products/:id/:slug?',
@@ -30,10 +32,22 @@ const router = createRouter({
           component: ProductDetails
         },
         {
-          path: 'profile/dashboard',
-          name: 'profile.dashboard',
-          component: ProfileDashboard,
-          meta: { requiresAuth: true },
+          path: 'account/dashboard',
+          name: 'account.dashboard',
+          component: AccountDashboard,
+          meta: {
+            requiresAuth: true,
+            transition: 'account'
+          },
+        },
+        {
+          path: 'account/information',
+          name: 'account.information',
+          component: AccountInformation,
+          meta: {
+            requiresAuth: true,
+            transition: 'account'
+          },
         },
       ]
     },
@@ -42,6 +56,11 @@ const router = createRouter({
       name: 'login.page',
       component: LoginPage,
     },
+   /* {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/NotFound.vue'),
+    }*/
   ],
 });
 router.beforeEach(async (to) => {

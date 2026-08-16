@@ -4,6 +4,7 @@ import { ThumbsUp, ThumbsDown, Flag, CheckCircle2, AlertTriangle } from '@lucide
 import { Icon } from '@iconify/vue'
 import RatingStars from '@/components/ui/RatingStars.vue'
 import BaseModal from '@/components/ui/BaseModal.vue'
+import dayjs from "dayjs";
 
 const props = defineProps({
   review: { type: Object, required: true },
@@ -24,15 +25,6 @@ const authorName = computed(() => {
   }
   return maskEmail(email)
 });
-function formatDate(date,locale = 'en-US') {
-  if (!date) return ''
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(date))
-}
-
 // ---- Report modal ----
 const showReportModal = ref(false)
 const reportReason = ref('')
@@ -88,7 +80,7 @@ function submitReport() {
           <span v-if="review.is_verified_purchase" class="badge-success text-2xs">
             <CheckCircle2 class="w-3 h-3" /> Verified
           </span>
-          <span class="text-xs text-ink-400">{{ formatDate(review.created_at) }}</span>
+          <span class="text-xs text-ink-400">{{ dayjs(review.created_at).format('MMM D, YYYY') }}</span>
         </div>
         <RatingStars :model-value="review.rating" size="sm" />
         <p v-if="review.title" class="font-semibold text-ink-900 mt-2">{{ review.title }}</p>

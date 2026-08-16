@@ -21,6 +21,9 @@ import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
 import {calcDiscount} from "@/utils/helpers.js";
 import {useAuthStore} from "@/stores/auth.js";
+import {useTitle} from "@vueuse/core";
+const pageTitle = ref(null);
+useTitle()
 const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
@@ -47,6 +50,8 @@ const loadProduct = async () => {
     const response = await api.get(endpoints.product(route.params.id));
     product.value = response.data.data.product;
     relatedProducts.value = response.data.data.relatedProducts;
+    pageTitle.value = 'Shoply | ' + product.value.name;
+    useTitle(pageTitle.value);
   }
   catch (error) {
     console.log(error);
@@ -805,7 +810,7 @@ const loadMoreReviews = async () => {
                   :key="review.id"
                   :review="review"
                 />
-                <p v-if="product?.reviews_count !== 0 && productReviews.length === 0" class="text-center text-sm text-ink-500 py-8">
+                <p v-if="product?.reviews_count !== 0 && productReviews?.length === 0" class="text-center text-sm text-ink-500 py-8">
                   No reviews match this filter.
                 </p>
                 <button

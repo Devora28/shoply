@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('email')->unique();
             $table->string('phone')->nullable()->unique();
+            $table->date('date_of_birth')->nullable();
+            $table->enum('gender', ['male', 'female', 'non_binary','prefer_not_to_say'])->default('prefer_not_to_say');
+            $table->text('bio')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
