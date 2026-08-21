@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\AccountInfoController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -24,9 +26,11 @@ Route::post('products/{product}/reviews',[ProductController::class,'storeReview'
 Route::prefix('account')->middleware('auth:sanctum')->group(function(){
     Route::get('/dashboard',[AccountDashboardController::class,'index'])->middleware('auth:sanctum')->name('account.dashboard');
     Route::get('/information',[AccountInfoController::class,'show'])->middleware('auth:sanctum')->name('account.information');
-    Route::put('/information',[AccountInfoController::class,'update'])->middleware('auth:sanctum')->name('account.information.update');
+    Route::put('/information',[AccountInfoController::class,'update'])->middleware(['auth:sanctum','throttle:2,1'])->name('account.information.update');
     Route::patch('/information',[AccountInfoController::class,'updatePassword'])->middleware('auth:sanctum')->name('account.password.update');
     Route::patch('/avatar',[AccountInfoController::class,'updateAvatar'])->middleware('auth:sanctum')->name('account.avatar.update');
     Route::delete('/avatar',[AccountInfoController::class,'destroyAvatar'])->middleware('auth:sanctum')->name('account.avatar.destroy');
+    Route::get('/orders',[OrderController::class,'index'])->middleware('auth:sanctum')->name('account.orders');
+    Route::get('/notifications',[NotificationController::class,'index'])->middleware('auth:sanctum')->name('account.notifications');
 });
 

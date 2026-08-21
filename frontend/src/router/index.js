@@ -6,6 +6,9 @@ import {useAuthStore} from "@/stores/auth.js";
 import ProductDetails from "@/pages/ProductDetails.vue";
 import AccountDashboard from "@/pages/account/AccountDashboard.vue";
 import AccountInformation from "@/pages/account/AccountInformation.vue";
+import AccountOrders from "@/pages/account/AccountOrders.vue";
+import AccountNotifications from "@/pages/account/AccountNotifications.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +47,24 @@ const router = createRouter({
           path: 'account/information',
           name: 'account.information',
           component: AccountInformation,
+          meta: {
+            requiresAuth: true,
+            transition: 'account'
+          },
+        },
+        {
+          path: 'account/orders',
+          name: 'account.orders',
+          component: AccountOrders,
+          meta: {
+            requiresAuth: true,
+            transition: 'account'
+          },
+        },
+        {
+          path: 'account/notifications',
+          name: 'account.notifications',
+          component: AccountNotifications,
           meta: {
             requiresAuth: true,
             transition: 'account'

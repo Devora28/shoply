@@ -11,4 +11,6 @@ export const endpoints  = {
   accountDashboard: '/account/dashboard',
   accountInformation: '/account/information',
   accountAvatar: '/account/avatar',
+  orders: '/account/orders',
+  notifications: '/account/notifications',
 }

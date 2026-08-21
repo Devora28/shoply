@@ -89,7 +89,7 @@ const userFullName = computed(() => {
 
 <template>
   <div class="section py-8 lg:py-12">
-    <BaseBreadcrumb :items="['Profile', 'Dashboard']" class="mb-6" />
+    <BaseBreadcrumb :items="['Account', 'Dashboard']" class="mb-6" />
     <div class="grid lg:grid-cols-[260px_1fr] gap-8">
       <!-- Sidebar (desktop) / Tab bar (mobile) -->
       <DesktopDashboardSidebar/>

@@ -2,10 +2,10 @@
 import {ref, computed, onMounted} from 'vue'
 import {
   User, Mail, Save, Camera, Lock, Eye, EyeOff,
-} from '@lucide/vue'
+} from '@lucide/vue';
 import BaseBreadcrumb from "@/components/ui/BaseBreadcrumb.vue";
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseInput from '../../components/ui/BaseInput.vue'
+import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseInput from '@/components/ui/BaseInput.vue';
 import DesktopDashboardSidebar from "@/components/ui/DesktopDashboardSidebar.vue";
 import MobileDashboardSidebar from "@/components/ui/MobileDashboardSidebar.vue";
 import api from "@/api/axios.js";
@@ -117,6 +117,9 @@ const saveProfile = async () => {
   }
   catch (error) {
     Object.assign(formErrors.value,error.response?.data?.errors ?? {})
+    if (error.response?.status === 429){
+      toast.error(error.response?.data.message)
+    }
   }
 }
 const savePassword = async () => {

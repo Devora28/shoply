@@ -36,10 +36,11 @@ class User extends Authenticatable
     public function orders(): HasMany{
         return $this->hasMany(Order::class,'user_id');
     }
-    public function notifications(): BelongsToMany{
-        return $this->belongsToMany(Notification::class,'notification_user','user_id','notification_id')
-            ->withPivot('read_at')
-            ->withTimestamps();
+    public function notifications() {
+        return Notification::where(function ($query) {
+            $query->whereNull('user_id')
+                ->orWhere('user_id', $this->id);
+        })->latest();
     }
     public function wishlist(){
         return $this->hasOne(Wishlist::class, 'user_id');

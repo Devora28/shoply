@@ -191,6 +191,7 @@ const trustBadges = [
 ];
 const fetchReviewsSortAndFilter = async () => {
   try {
+    nextCursor.value = null;
     const response = await api.get(endpoints.ProductReview(route.params.id),{
       params: {
         review_sort: reviewSort.value,
@@ -198,6 +199,7 @@ const fetchReviewsSortAndFilter = async () => {
       }
     });
     productReviews.value = response.data.data.reviews.data;
+    nextCursor.value = response.data.data.reviews.next_cursor;
   }
   catch (error) {
     console.log(error);
