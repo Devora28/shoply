@@ -2,12 +2,14 @@
 const props = defineProps({
   totalPages: { type: Number, default: 1 },
   modelValue: { type: Number, default: 1 },
+  disabled: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 function go(page) {
   if (
+    props.disabled ||
     page >= 1 &&
     page <= props.totalPages &&
     page !== props.modelValue
@@ -52,7 +54,7 @@ function pages() {
     <button
       class="btn-secondary btn-sm btn-icon disabled:opacity-40"
       @click="go(modelValue - 1)"
-      :disabled="modelValue === 1"
+      :disabled="disabled || modelValue === 1"
       aria-label="Previous page"
     >
       <svg
@@ -77,6 +79,7 @@ function pages() {
       <button
         v-else
         @click="go(p)"
+        :disabled="disabled"
         :class="[
           'inline-flex items-center justify-center min-w-[36px] h-9 px-3 rounded-xl text-sm font-semibold transition-all',
           p === modelValue
@@ -91,7 +94,7 @@ function pages() {
     <button
       class="btn-secondary btn-sm btn-icon disabled:opacity-40"
       @click="go(modelValue + 1)"
-      :disabled="modelValue === totalPages"
+      :disabled="disabled || modelValue === totalPages"
       aria-label="Next page"
     >
       <svg

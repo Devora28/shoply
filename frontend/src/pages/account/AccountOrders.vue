@@ -27,7 +27,7 @@ const filters = [
 const activeFilter = ref('all');
 const searchQuery = ref('');
 const sortOrder = ref('newest');
-
+const isLoading = ref(false);
 const statusBadge = {
   pending: 'badge-neutral',
   processing: 'badge-warning',
@@ -36,6 +36,7 @@ const statusBadge = {
   cancelled: 'badge-danger',
 }
 const fetchFilters = async () => {
+  isLoading.value = true;
   const token = localStorage.getItem('auth_token');
   try {
     const params = {
@@ -61,6 +62,9 @@ const fetchFilters = async () => {
   }
   catch (error) {
     console.error(error)
+  }
+  finally {
+    isLoading.value = false;
   }
 }
 watch(
@@ -212,6 +216,7 @@ onMounted(async () => {
           <Pagination
             v-model="currentPage"
             :total-pages="totalPages"
+            :disabled="isLoading"
           />
         </div>
         <!-- Empty state -->

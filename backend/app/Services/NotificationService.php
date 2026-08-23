@@ -24,4 +24,34 @@ class NotificationService{
             'unreadCount' => $unreadCount
         ];
     }
+    public function markAsRead(User $user,$id){
+        $notification = $user->notifications()->findOrFail($id);
+        $notification->update(['read_at'=>now()]);
+        $unreadCount = Notification::where('user_id',$user->id)->where('read_at',null)->count();
+        return [
+            'notification' => $notification->fresh(),
+            'unreadCount' => $unreadCount
+        ];
+    }
+    public function markAsReadAll(User $user){
+        $notifications = Notification::where('user_id',$user->id)
+            ->whereNull('read_at')
+            ->get();
+        foreach($notifications as $notification){
+            $notification->update(['read_at'=>now()]);
+        }
+        $unreadCount = Notification::where('user_id',$user->id)->where('read_at',null)->count();
+        return [
+            'notifications' => $notifications->fresh(),
+            'unreadCount' => $unreadCount
+        ];
+    }
+    public function delete(User $user,$id){
+        $notification = Notification::where('user_id',$user->id)->findOrFail($id);
+        $notification->delete();
+        $unreadCount = Notification::where('user_id',$user->id)->where('read_at',null)->count();
+        return [
+            'unreadCount' => $unreadCount
+        ];
+    }
 }

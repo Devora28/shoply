@@ -14,7 +14,7 @@ import Pagination from "@/components/paginations/Pagination.vue";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
-const notifications = ref({});
+const notifications = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const notifList = ref(null);
@@ -44,7 +44,9 @@ const typeColor = {
   security: 'bg-danger-50 text-danger-600',
   review: 'bg-warning-50 text-warning-600',
 }
+const isLoading = ref(false);
 const fetchNotifications = async () => {
+  isLoading.value = true;
   const token = localStorage.getItem('auth_token');
   const params = {
     page: currentPage.value,
@@ -65,6 +67,74 @@ const fetchNotifications = async () => {
     currentPage.value = response.data.data.notifications.current_page;
     totalPages.value = response.data.data.notifications.last_page;
     unreadCount.value = response.data.data.unreadCount;
+  }
+  catch (error) {
+    console.error(error);
+  }
+  finally {
+    isLoading.value = false;
+  }
+}
+const markAsRead = async (id) => {
+  const token = localStorage.getItem('auth_token');
+  try {
+    const response = await api.patch(endpoints.notifMarkAsRead(id),{},{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    const updatedNotification = response.data.data.notification;
+    const index = notifications.value.findIndex(n => n.id === id)
+    unreadCount.value = response.data.data.unreadCount;
+    if (index !== -1) {
+      notifications.value[index] = updatedNotification;
+    }
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+const markAsReadAll = async () => {
+  const token = localStorage.getItem('auth_token');
+  try {
+    const response = await api.patch(endpoints.notifMarkAsReadAll,{},{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    const updatedNotifications = response.data.data.notifications;
+    unreadCount.value = response.data.data.unreadCount;
+    updatedNotifications.forEach((notification) => {
+      const index = notifications.value.findIndex(n => n.id === notification.id);
+      if (index !== -1) {
+        notifications.value[index] = notification;
+      }
+    })
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+const deleteNotification = async (id) => {
+  const token = localStorage.getItem('auth_token');
+  try {
+    const response = await api.delete(endpoints.notification(id),{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    const index = notifications.value.findIndex(n => n.id === id);
+    unreadCount.value = response.data.data.unreadCount;
+    const wasLastItem = notifications.value.length === 1;
+    if (index !== -1) {
+      notifications.value.splice(index, 1);
+    }
+    if (wasLastItem && currentPage.value > 1) {
+      currentPage.value--;
+    }
+    else {
+      await fetchNotifications();
+    }
   }
   catch (error) {
     console.error(error);
@@ -121,7 +191,7 @@ onMounted(async () => {
             </div>
             <p class="text-ink-500 mt-1">Stay updated on your orders, deals, and account activity.</p>
           </div>
-          <BaseButton variant="secondary" size="md" :disabled="!unreadCount" @click="markAllRead">
+          <BaseButton variant="secondary" size="md" :disabled="!unreadCount" @click="markAsReadAll">
             <CheckCheck class="w-4 h-4" />
             Mark all as read
           </BaseButton>
@@ -167,15 +237,18 @@ onMounted(async () => {
             <!-- Actions -->
             <div class="flex items-center gap-1 shrink-0">
               <button
-                v-if="!n.read_at"
+                v-if="n.user_id && !n.read_at"
                 class="p-2 rounded-lg text-ink-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                 title="Mark as read"
+                @click="markAsRead(n.id)"
               >
                 <MailOpen class="w-4 h-4" />
               </button>
               <button
+                v-if="n.user_id"
                 class="p-2 rounded-lg text-ink-400 hover:text-danger-600 hover:bg-danger-50 transition-colors"
                 title="Delete"
+                @click="deleteNotification(n.id)"
               >
                 <Trash2 class="w-4 h-4" />
               </button>
@@ -199,6 +272,7 @@ onMounted(async () => {
         <Pagination
           v-model="currentPage"
           :total-pages="totalPages"
+          :disabled="isLoading"
         />
       </div>
     </div>

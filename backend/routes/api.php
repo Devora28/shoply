@@ -32,5 +32,8 @@ Route::prefix('account')->middleware('auth:sanctum')->group(function(){
     Route::delete('/avatar',[AccountInfoController::class,'destroyAvatar'])->middleware('auth:sanctum')->name('account.avatar.destroy');
     Route::get('/orders',[OrderController::class,'index'])->middleware('auth:sanctum')->name('account.orders');
     Route::get('/notifications',[NotificationController::class,'index'])->middleware('auth:sanctum')->name('account.notifications');
+    Route::delete('/notifications/{id}',[NotificationController::class,'destroy'])->middleware('auth:sanctum')->name('account.notifications.destroy');
+    Route::patch('/notifications/{id}/read',[NotificationController::class,'markAsRead'])->middleware('auth:sanctum')->name('account.notifications.read');
+    Route::patch('/notifications/read',[NotificationController::class,'markAsReadAll'])->middleware('auth:sanctum')->name('account.notifications.readAll');
 });
 

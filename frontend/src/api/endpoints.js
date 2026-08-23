@@ -13,4 +13,7 @@ export const endpoints  = {
   accountAvatar: '/account/avatar',
   orders: '/account/orders',
   notifications: '/account/notifications',
+  notification: (id) => `/account/notifications/${id}`,
+  notifMarkAsRead: (id) => `/account/notifications/${id}/read`,
+  notifMarkAsReadAll: '/account/notifications/read',
 }
