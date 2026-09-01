@@ -140,9 +140,7 @@ watch(
     <label v-if="label" class="label">
       {{ label }}
     </label>
-
-    <div class="flex gap-2">
-
+    <div class="flex gap-1">
       <select
         v-model="country"
         class="input w-[125px] shrink-0"
@@ -156,7 +154,6 @@ watch(
           {{ item.flag }} {{ item.dialCode }}
         </option>
       </select>
-
       <input
         :value="displayPhone"
         type="tel"
@@ -167,11 +164,9 @@ watch(
       />
 
     </div>
-
     <p v-if="error" class="error-text">
       {{ error }}
     </p>
-
     <p v-else-if="hint" class="hint">
       {{ hint }}
     </p>

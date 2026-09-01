@@ -2,17 +2,21 @@
   import AppHeader from "@/components/layout/AppHeader.vue";
   import AppFooter from "@/components/layout/AppFooter.vue";
   import {useRoute} from "vue-router";
+  import MobileHeader from "@/components/ui/MobileHeader.vue";
+  import MobileBottomNav from "@/components/ui/MobileBottomNav.vue";
   const route = useRoute();
 </script>
 
 <template>
   <AppHeader/>
+  <MobileHeader/>
   <RouterView v-slot="{ Component }">
     <Transition :name="route.meta.transition || ''">
       <component :is="Component" />
     </Transition>
   </RouterView>
   <AppFooter/>
+  <MobileBottomNav/>
 </template>
 
 <style>

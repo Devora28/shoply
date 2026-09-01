@@ -14,7 +14,6 @@ import {
 import RatingStars from "@/components/ui/RatingStars.vue";
 import ProductCard from "@/components/product/ProductCard.vue";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
-import QuantitySelector from "@/components/ui/QuantitySelector.vue";
 import ReviewItem from "@/components/ui/ReviewItem.vue";
 import BaseBreadcrumb from "@/components/ui/BaseBreadcrumb.vue";
 import api from "@/api/axios.js";
@@ -22,6 +21,9 @@ import {endpoints} from "@/api/endpoints.js";
 import {calcDiscount} from "@/utils/helpers.js";
 import {useAuthStore} from "@/stores/auth.js";
 import {useTitle} from "@vueuse/core";
+import {useCartStore} from "@/stores/cart.js";
+import {useWishlistStore} from "@/stores/wishlist.js";
+const wishlistStore = useWishlistStore();
 const pageTitle = ref(null);
 useTitle()
 const authStore = useAuthStore();
@@ -35,6 +37,97 @@ const ratingSummary = ref(null);
 const nextCursor = ref(null);
 const loadingMore = ref(false);
 const reviewSubmitting = ref(false);
+const cartStore = useCartStore();
+const addingToCart = ref(false)
+const updatingCart = ref(false)
+
+const cartItem = computed(() => {
+  if (!product.value) {
+    return null
+  }
+
+  return cartStore.findItem(
+    product.value.id,
+    selectedVariant.value?.id ?? null
+  )
+})
+
+const isInCart = computed(() => {
+  return cartItem.value !== null
+})
+
+const cartItemQuantity = computed(() => {
+  return Number(cartItem.value?.quantity ?? 0)
+})
+
+const addProductToCart = async () => {
+  try {
+    addingToCart.value = true
+    await cartStore.addToCart({
+      product: product.value,
+      variant: selectedVariant.value,
+      quantity: 1,
+      isAuthenticated: authStore.isAuth,
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    addingToCart.value = false
+  }
+}
+
+const updateCartQuantity = async (quantity) => {
+  if (!cartItem.value) {
+    return
+  }
+
+  try {
+    updatingCart.value = true
+
+    await cartStore.updateQuantity({
+      item: cartItem.value,
+      quantity,
+      isAuthenticated: authStore.isAuth,
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    updatingCart.value = false
+  }
+}
+
+const increaseCartQuantity = async () => {
+  const quantity = cartItemQuantity.value + 1
+
+  if (quantity > currentStock.value) {
+    return
+  }
+
+  await updateCartQuantity(quantity)
+}
+
+const decreaseCartQuantity = async () => {
+  const quantity = cartItemQuantity.value - 1
+
+  if (quantity < 1) {
+    try {
+      updatingCart.value = true
+
+      await cartStore.removeFromCart({
+        item: cartItem.value,
+        isAuthenticated: authStore.isAuth,
+      })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      updatingCart.value = false
+    }
+
+    return
+  }
+
+  await updateCartQuantity(quantity)
+}
 const galleryImages = computed(() => {
   if (!product.value) return []
   return [
@@ -49,6 +142,12 @@ const loadProduct = async () => {
     loading.value = true;
     const response = await api.get(endpoints.product(route.params.id));
     product.value = response.data.data.product;
+    if (product.value?.variants?.length) {
+      const firstVariant = product.value.variants[0]
+      selectedAttributes.value = {
+        ...(firstVariant.attributes ?? {})
+      }
+    }
     relatedProducts.value = response.data.data.relatedProducts;
     pageTitle.value = 'Shoply | ' + product.value.name;
     useTitle(pageTitle.value);
@@ -79,13 +178,96 @@ watch(
   },
   { immediate: true }
 )
-
 // ---- Gallery ----
 const thumbsSwiper = ref(null)
 const setThumbsSwiper = (swiper) => { thumbsSwiper.value = swiper }
 const modules = [Navigation, Pagination, Thumbs]
 // ---- Variants ----
 const quantity = ref(1)
+const selectedAttributes = ref({})
+const hasVariants = computed(() => {
+  return (product.value?.variants?.length ?? 0) > 0
+})
+const variantGroups = computed(() => {
+  if (!product.value?.variants?.length) {
+    return []
+  }
+  const groups = {}
+  product.value.variants.forEach(variant => {
+    Object.entries(variant.attributes ?? {}).forEach(([attribute, value]) => {
+      if (!groups[attribute]) {
+        groups[attribute] = new Set()
+      }
+      groups[attribute].add(value)
+    })
+  })
+  return Object.entries(groups).map(([name, values]) => ({
+    name,
+    values: [...values],
+  }))
+})
+const selectedVariant = computed(() => {
+  if (!hasVariants.value) {
+    return null
+  }
+  const selections = selectedAttributes.value
+  return product.value.variants.find(variant => {
+    const attributes = variant.attributes ?? {}
+    const variantKeys = Object.keys(attributes)
+    const selectedKeys = Object.keys(selections)
+    if (variantKeys.length !== selectedKeys.length) {
+      return false
+    }
+    return variantKeys.every(
+      key => attributes[key] === selections[key]
+    )
+  }) ?? null
+})
+const currentPrice = computed(() => {
+  if (hasVariants.value) {
+    return selectedVariant.value?.price ?? null
+  }
+  return product.value?.price ?? null
+})
+const currentStock = computed(() => {
+  if (hasVariants.value) {
+    return selectedVariant.value?.stock ?? 0
+  }
+  return product.value?.stock ?? 0
+})
+const currentSku = computed(() => {
+  if (hasVariants.value) {
+    return selectedVariant.value?.sku ?? null
+  }
+  return product.value?.sku ?? null
+})
+const selectAttribute = (attribute, value) => {
+  selectedAttributes.value = {
+    ...selectedAttributes.value,
+    [attribute]: value,
+  }
+
+  quantity.value = 1
+}
+
+const isAttributeValueSelected = (attribute, value) => {
+  return selectedAttributes.value[attribute] === value
+}
+const isVariantValueAvailable = (attribute, value) => {
+  if (!product.value?.variants?.length) {
+    return false
+  }
+  const currentSelections = {
+    ...selectedAttributes.value,
+    [attribute]: value,
+  }
+  return product.value.variants.some(variant => {
+    return Object.entries(currentSelections).every(
+      ([key, selectedValue]) =>
+        variant.attributes?.[key] === selectedValue
+    )
+  })
+}
 // ---- Tabs ----
 const activeTab = ref('specs')
 const tabs = [
@@ -158,7 +340,6 @@ const submitReview = async () => {
     },3000)
   }
 }
-
 // ---- Actions ----
 function handleShare() {
   if (navigator.share) {
@@ -175,8 +356,8 @@ const scrollToReviewForm = () => {
 }
 // ---- Stock ----
 const stockLevel = computed(() => {
-  if (product.value?.stock > 20) return 'high'
-  if (product.value?.stock > 5) return 'medium'
+  if (currentStock.value > 20) return 'high'
+  if (currentStock.value > 5) return 'medium'
   return 'low'
 })
 const stockColor = { high: 'text-success-600', medium: 'text-warning-600', low: 'text-danger-600' }
@@ -239,11 +420,9 @@ const loadMoreReviews = async () => {
     <!-- Main product section skeleton -->
     <div v-if="loading" class="section pt-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
         <!-- Gallery -->
         <div>
           <div class="aspect-square skeleton rounded-2xl"></div>
-
           <div class="flex gap-3 mt-4">
             <div
               v-for="i in 4"
@@ -252,29 +431,21 @@ const loadMoreReviews = async () => {
             ></div>
           </div>
         </div>
-
         <!-- Right -->
         <div>
-
           <div class="h-4 w-24 skeleton rounded mb-4"></div>
-
           <div class="h-8 w-4/5 skeleton rounded mb-3"></div>
-
           <div class="h-5 w-40 skeleton rounded mb-6"></div>
-
           <div class="h-10 w-36 skeleton rounded mb-5"></div>
-
           <div class="space-y-2 mb-6">
             <div class="h-4 skeleton rounded"></div>
             <div class="h-4 w-5/6 skeleton rounded"></div>
             <div class="h-4 w-2/3 skeleton rounded"></div>
           </div>
-
           <div class="flex gap-4 mb-6">
             <div class="w-36 h-12 skeleton rounded-xl"></div>
             <div class="flex-1 h-12 skeleton rounded-xl"></div>
           </div>
-
           <div class="grid grid-cols-2 gap-3">
             <div
               v-for="i in 4"
@@ -282,9 +453,7 @@ const loadMoreReviews = async () => {
               class="h-24 skeleton rounded-xl"
             ></div>
           </div>
-
         </div>
-
       </div>
     </div>
     <!-- Main product section -->
@@ -351,67 +520,187 @@ const loadMoreReviews = async () => {
 
           <!-- Price -->
           <div class="flex flex-wrap items-baseline gap-3 mb-4">
-            <span class="text-3xl font-bold text-primary-700">${{calcDiscount(product?.price,product?.discount)}}</span>
-            <span v-if="product?.discount > 0" class="text-lg text-ink-400 line-through">${{product?.price}}</span>
+            <span class="text-3xl font-bold text-primary-700">${{calcDiscount(currentPrice,product?.discount)}}</span>
+            <span v-if="product?.discount > 0" class="text-lg text-ink-400 line-through">${{currentPrice}}</span>
             <span v-if="product?.discount > 0" class="badge-danger">Save {{ product?.discount }}%</span>
           </div>
           <!-- Short description -->
           <p class="text-sm text-ink-600 leading-relaxed mb-6">{{ product?.short_description }}</p>
           <div class="divider mb-6"></div>
-          <!-- Color variants -->
-<!--          <div class="mb-5">
-            <div class="flex items-center gap-2 mb-2.5">
-              <span class="label !mb-0">Color:</span>
-              <span class="text-sm font-semibold text-ink-900">{{ selectedColor }}</span>
-            </div>
-            <div class="flex flex-wrap gap-2.5">
-              <button
-                v-for="color in product.colors"
-                :key="color"
-                @click="selectedColor = color"
-                :class="[
-                  'px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all',
-                  selectedColor === color
+          <!-- Product variants -->
+          <div v-if="hasVariants" class="space-y-5 mb-6">
+            <div
+              v-for="group in variantGroups"
+              :key="group.name"
+            >
+              <div class="flex items-center gap-2 mb-2.5">
+                <span class="label !mb-0">
+                  {{ group.name }}:
+                </span>
+                <span class="text-sm font-semibold text-ink-900">
+                  {{ selectedAttributes[group.name] ?? 'Select' }}
+                </span>
+              </div>
+              <div class="flex flex-wrap gap-2.5">
+                <button
+                  v-for="value in group.values"
+                  :key="value"
+                  type="button"
+                  :disabled="!isVariantValueAvailable(group.name, value)"
+                  @click="selectAttribute(group.name, value)"
+                  :class="[
+                    'px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all',
+                    isAttributeValueSelected(group.name, value)
                     ? 'border-primary-600 bg-primary-50 text-primary-700'
-                    : 'border-ink-200 bg-white text-ink-700 hover:border-ink-300'
-                ]"
-              >
-                {{ color }}
-              </button>
+                    : 'border-ink-200 bg-white text-ink-700 hover:border-ink-300',
+                    !isVariantValueAvailable(group.name, value)
+                    ? 'opacity-40 cursor-not-allowed'
+                    : ''
+                    ]"
+                >
+                  {{ value }}
+                </button>
+              </div>
             </div>
-          </div>-->
-
-          <!-- Quantity + Stock -->
-          <div class="flex flex-wrap items-center gap-4 mb-6">
-            <div>
-              <span class="label">Quantity</span>
-              <QuantitySelector v-model="quantity" :min="1" :max="product?.stock" />
-            </div>
-            <div class="flex items-center gap-2 mt-6">
-              <span class="inline-flex items-center justify-center w-2.5 h-2.5 rounded-full" :class="stockBg[stockLevel]"></span>
-              <span class="text-sm font-medium" :class="stockColor[stockLevel]">
-                <template v-if="stockLevel === 'high'">In stock</template>
-                <template v-else-if="stockLevel === 'medium'">Only {{ product?.stock }} left</template>
-                <template v-else>Low stock — only {{ product?.stock }} left!</template>
-              </span>
+            <!-- Selected SKU -->
+            <div
+              v-if="selectedVariant?.sku"
+              class="text-xs text-ink-500"
+            >
+              SKU: {{ selectedVariant.sku }}
             </div>
           </div>
-
+          <!-- Quantity + Stock -->
+          <div class="flex items-center gap-2 mb-6">
+            <span
+              class="inline-flex items-center justify-center w-2.5 h-2.5 rounded-full"
+              :class="stockBg[stockLevel]"
+            ></span>
+            <span
+              class="text-sm font-medium"
+              :class="stockColor[stockLevel]"
+            >
+              <template v-if="stockLevel === 'high'">
+                In stock
+              </template>
+              <template v-else-if="stockLevel === 'medium'">
+                Only {{ currentStock }} left
+              </template>
+              <template v-else>
+                Low stock — only {{ currentStock }} left!
+              </template>
+            </span>
+          </div>
           <!-- Action buttons -->
           <div class="flex flex-col sm:flex-row gap-3 mb-4">
-            <button class="btn-primary btn-lg flex-1">
+            <!-- Add to Cart -->
+            <button
+              v-if="!isInCart"
+              type="button"
+              class="btn-primary btn-lg flex-1"
+              :disabled="
+              addingToCart ||
+              currentStock <= 0 ||
+              (hasVariants && !selectedVariant)"
+              @click="addProductToCart"
+            >
+              <ShoppingCart
+                v-if="!addingToCart"
+                class="w-5 h-5"
+              />
+              <svg
+                v-else
+                class="w-5 h-5 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 01-4 4H4z"
+                />
+              </svg>
+              {{ addingToCart ? 'Adding...' : 'Add to Cart' }}
+            </button>
+            <!-- View Cart -->
+            <button
+              v-else
+              type="button"
+              class="btn-primary btn-lg flex-1"
+              @click="router.push({ name: 'cart.page' })"
+            >
               <ShoppingCart class="w-5 h-5" />
-              Add to Cart
+              View Cart
             </button>
-            <button class="btn-accent btn-lg flex-1">
-              Buy Now
-            </button>
+            <!-- Cart Quantity -->
+            <div
+              v-if="isInCart"
+              class="flex items-center h-12 rounded-xl border border-ink-200 bg-white overflow-hidden shrink-0"
+            >
+              <button
+                type="button"
+                class="w-12 h-full flex items-center justify-center text-lg font-semibold text-ink-700 hover:bg-ink-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                :disabled="updatingCart"
+                @click="decreaseCartQuantity"
+              >
+                −
+              </button>
+              <div class="min-w-12 px-2 h-full flex items-center justify-center border-x border-ink-200 text-sm font-semibold text-ink-900">
+                {{ cartItemQuantity }}
+              </div>
+              <button
+                type="button"
+                class="w-12 h-full flex items-center justify-center text-lg font-semibold text-ink-700 hover:bg-ink-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                :disabled="
+        updatingCart ||
+        cartItemQuantity >= currentStock
+      "
+                @click="increaseCartQuantity"
+              >
+                +
+              </button>
+            </div>
           </div>
-
           <!-- Wishlist + Share -->
           <div class="flex items-center gap-3 mb-6">
             <button
+              v-if="wishlistStore.isInWishlist(product.id)"
               class="btn-secondary btn-md flex-1"
+              @click="
+                authStore.isAuth
+                  ? wishlistStore.toggleWishlist(product.id)
+                  : router.push({
+                      name: 'login.page',
+                      query: {
+                      redirect: router.currentRoute.value.fullPath
+                      }
+                  })"
+            >
+              <Heart
+                class="fill-current text-danger-500 w-4 h-4"
+              />
+              Remove from Wishlist
+            </button>
+            <button
+              v-else
+              class="btn-secondary btn-md flex-1"
+              @click="
+                authStore.isAuth
+                  ? wishlistStore.toggleWishlist(product.id)
+                  : router.push({
+                      name: 'login.page',
+                      query: {
+                      redirect: router.currentRoute.value.fullPath
+                      }
+                  })"
             >
               <Heart
                 class="w-4 h-4"
@@ -423,7 +712,6 @@ const loadMoreReviews = async () => {
               Share
             </button>
           </div>
-
           <!-- Trust badges -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div
@@ -738,10 +1026,9 @@ const loadMoreReviews = async () => {
           <!-- Reviews with summary -->
           <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Rating summary (left) -->
-            <div class="lg:col-span-1">
+            <div class="lg:col-span-1 select-none">
               <div class="card p-5 lg:sticky lg:top-24">
                 <h3 class="text-lg font-bold text-ink-900 mb-4">Rating Summary</h3>
-
                 <!-- Overall score -->
                 <div class="flex items-center gap-4 mb-5">
                   <div class="text-center">

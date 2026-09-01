@@ -34,6 +34,17 @@ class ProductResource extends JsonResource
             'category' => $this->whenLoaded('category'),
             'images' => $this->whenLoaded('images'),
             'reviews' => $this->whenLoaded('reviews'),
+            'variants' => $this->whenLoaded('variants', function () {
+                return $this->variants->map(function ($variant) {
+                    return [
+                        'id' => $variant->id,
+                        'sku' => $variant->sku,
+                        'price' => $variant->price,
+                        'stock' => $variant->stock,
+                        'attributes' => $variant->attributes ?? [],
+                    ];
+                });
+            }),
         ];
     }
 }

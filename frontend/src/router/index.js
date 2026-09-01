@@ -8,6 +8,8 @@ import AccountDashboard from "@/pages/account/AccountDashboard.vue";
 import AccountInformation from "@/pages/account/AccountInformation.vue";
 import AccountOrders from "@/pages/account/AccountOrders.vue";
 import AccountNotifications from "@/pages/account/AccountNotifications.vue";
+import AccountAddresses from "@/pages/account/AccountAddresses.vue";
+import AccountWishlist from "@/pages/account/AccountWishlist.vue";
 
 
 const router = createRouter({
@@ -68,6 +70,23 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
             transition: 'account'
+          },
+        },
+        {
+          path: 'account/addresses',
+          name: 'account.addresses',
+          component: AccountAddresses,
+          meta: {
+            requiresAuth: true,
+            transition: 'account'
+          },
+        },
+        {
+          path: 'wishlist',
+          name: 'wishlist',
+          component: AccountWishlist,
+          meta: {
+            requiresAuth: true,
           },
         },
       ]

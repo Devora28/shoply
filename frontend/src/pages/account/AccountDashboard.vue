@@ -158,12 +158,11 @@ const userFullName = computed(() => {
               <div class="h-4 w-20 rounded-md skeleton"></div>
             </template>
             <template v-else>
-              <p class="text-2xl font-bold text-ink-900">{{ stat.value }}</p>
+              <p class="text-2xl font-bold text-ink-900">{{ stat.value ?? 0 }}</p>
               <p class="text-sm text-ink-500">{{ stat.label }}</p>
             </template>
           </router-link>
         </div>
-
         <!-- Recent orders -->
         <div class="card overflow-hidden">
           <div class="flex items-center justify-between p-5 border-b border-ink-200">

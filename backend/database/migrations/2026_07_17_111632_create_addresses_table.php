@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('title');
+            $table->enum('title',['Home','Work','Parents','Other'])->default('Home');
             $table->string('receiver_name');
             $table->string('company', 100)->nullable();
             $table->string('phone');

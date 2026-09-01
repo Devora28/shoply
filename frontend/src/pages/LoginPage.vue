@@ -7,36 +7,31 @@ import {endpoints} from "@/api/endpoints.js";
 import {useAuthStore} from "@/stores/auth.js";
 import {toast} from "vue-sonner";
 import {useTitle} from "@vueuse/core";
+import {useCartStore} from "@/stores/cart.js";
 useTitle('Shoply | Auth Page')
 const authStore = useAuthStore()
+const cartStore = useCartStore()
 const router = useRouter()
 const route = useRoute()
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
-
-// 'idle' = email only, 'otp' = 6-digit code, 'password' = password field
 const mode = ref('idle')
-
 const otpDigits = reactive(Array(6).fill(''))
 const otpRefs = ref([])
 const otpError = ref('')
 const passwordError = ref('')
 const emailError = ref('')
 const loading = ref(false)
-
 const emailValid = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value))
 const otpComplete = computed(() => otpDigits.every(d => d !== ''))
 const canSubmitEmail = computed(() => emailValid.value && !loading.value)
-
 function setOtpRef(el, index) {
   if (el) otpRefs.value[index] = el
 }
-
 function onOtpInput(index, event) {
   const value = event.target.value
   otpError.value = ''
-  // If a single char was typed, move to next
   if (value && value.length >= 1) {
     const digit = value[value.length - 1]
     if (/\d/.test(digit)) {
@@ -50,19 +45,15 @@ function onOtpInput(index, event) {
   } else {
     otpDigits[index] = ''
   }
-  // Auto-submit when all 6 filled
   if (otpComplete.value) {
     submitOtp()
   }
 }
-
 function onOtpKeydown(index, event) {
   if (event.key === 'Backspace') {
     if (otpDigits[index]) {
-      // Clear current field
       otpDigits[index] = ''
     } else if (index > 0) {
-      // Move back and clear previous
       event.preventDefault()
       otpDigits[index - 1] = ''
       nextTick(() => otpRefs.value[index - 1]?.focus())
@@ -149,7 +140,8 @@ async function submitOtp() {
     });
     if (response.data.success){
       await authStore.login(response.data.token);
-      const redirectUrl = route.query.redirect
+      await cartStore.mergeGuestCart()
+      const redirectUrl = route.query.redirect;
       setTimeout(() => {
         router.push(redirectUrl || '/')
       }, 500)
@@ -178,7 +170,8 @@ async function submitPassword() {
     });
     if (response.data.success){
       await authStore.login(response.data.token);
-      const redirectUrl = route.query.redirect
+      await cartStore.mergeGuestCart();
+      const redirectUrl = route.query.redirect;
       setTimeout(() => {
         router.push(redirectUrl || '/')
       }, 500)
@@ -194,7 +187,6 @@ async function submitPassword() {
 }
 
 function googleLogin() {
-  // Backend handles Google OAuth
   loading.value = true
   setTimeout(() => {
     loading.value = false

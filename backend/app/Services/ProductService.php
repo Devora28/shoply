@@ -11,6 +11,7 @@ class ProductService{
             'brand',
             'category',
             'images',
+            'variants',
         ])->loadCount('reviews');
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->where('stock','>',0)

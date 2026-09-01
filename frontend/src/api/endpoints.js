@@ -16,4 +16,13 @@ export const endpoints  = {
   notification: (id) => `/account/notifications/${id}`,
   notifMarkAsRead: (id) => `/account/notifications/${id}/read`,
   notifMarkAsReadAll: '/account/notifications/read',
+  addresses: '/account/addresses',
+  address: (id) => `/account/addresses/${id}`,
+  setDefaultAddr: (id) => `/account/addresses/${id}/default`,
+  cart: '/cart',
+  cartAction: (id) => `/cart/${id}`,
+  cartClear: '/cart/clear',
+  cartMerge: '/cart/merge',
+  wishlist: '/wishlist',
+  wishlistItem: (id) => `/wishlist/item/${id}`,
 }

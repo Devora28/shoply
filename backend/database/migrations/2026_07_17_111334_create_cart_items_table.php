@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->foreignId('variant_id')->nullable()->constrained('product_variants')->nullOnDelete();
             $table->integer('quantity');
-            $table->decimal('price',15,2);
             $table->timestamps();
         });
     }

@@ -2,11 +2,15 @@
 import RatingStars from "@/components/ui/RatingStars.vue";
 import { Heart, ShoppingCart, Eye } from '@lucide/vue';
 import { useRouter } from 'vue-router';
-import {calcDiscount} from "../../utils/helpers.js";
+import {calcDiscount, formatPrice} from "@/utils/helpers.js";
+import {useWishlistStore} from "@/stores/wishlist.js";
+import {useAuthStore} from "@/stores/auth.js";
 const router = useRouter();
 defineProps({
   product: { type: Object, required: true },
 });
+const wishlistStore = useWishlistStore();
+const authStore = useAuthStore();
 </script>
 <template>
   <div class="card card-hover group cursor-pointer relative flex flex-col"
@@ -22,8 +26,35 @@ defineProps({
     </div>
     <!-- Wishlist -->
     <button
+      v-if="wishlistStore.isInWishlist(product.id)"
       class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/80 glass hover:bg-white shadow-sm transition-all"
-      @click.stop=""
+      @click.stop="
+      authStore.isAuth
+        ? wishlistStore.toggleWishlist(product.id)
+        : router.push({
+            name: 'login.page',
+            query: {
+            redirect: router.currentRoute.value.fullPath
+            }
+      })"
+      aria-label="Add to wishlist"
+    >
+      <Heart
+        class="fill-current text-danger-500 w-4 h-4 transition-colors"
+      />
+    </button>
+    <button
+      v-else
+      class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/80 glass hover:bg-white shadow-sm transition-all"
+      @click.stop="
+      authStore.isAuth
+        ? wishlistStore.toggleWishlist(product.id)
+        : router.push({
+            name: 'login.page',
+            query: {
+            redirect: router.currentRoute.value.fullPath
+            }
+      })"
       aria-label="Add to wishlist"
     >
       <Heart
@@ -63,8 +94,8 @@ defineProps({
         <span class="text-xs text-ink-500">(155)</span>
       </div>
       <div class="mt-auto flex items-baseline gap-2">
-        <span class="text-lg font-bold text-primary-700">${{calcDiscount(product.price,product.discount)}}</span>
-        <span class="text-sm text-ink-400 line-through">${{product.price}}</span>
+        <span class="text-lg font-bold text-primary-700">{{formatPrice(calcDiscount(product.price,product.discount))}}</span>
+        <span class="text-sm text-ink-400 line-through">{{formatPrice(product.price)}}</span>
       </div>
       <div class="mt-1.5 flex items-center gap-1 text-xs text-success-600">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3a1 1 0 01-1-1V8a1 1 0 011-1h12a1 1 0 011 1v10M9 18h6m-9 0a2 2 0 11-4 0m4 0a2 2 0 11-4 0m9-7h4l3 3v4a1 1 0 01-1 1h-2m-4 0a2 2 0 11-4 0m4 0a2 2 0 11-4 0"/></svg>

@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Http\Resources\ProductCardResource;
+use App\Http\Resources\UserResource;
 use App\Models\Product;
 use App\Models\User;
 class AccountDashboardService{
@@ -8,9 +9,6 @@ class AccountDashboardService{
         $user->load([
             'orders.items.product' => fn($q) => $q
                 ->take(3)
-                ->latest(),
-            'notifications' => fn($q) => $q
-                ->wherePivotNull('read_at')
                 ->latest(),
             'wishlist' => fn($q) => $q->withCount('items'),
         ]);
@@ -27,7 +25,7 @@ class AccountDashboardService{
             ->take(8)
             ->get();
         return [
-            'user' => $user,
+            'user' => new UserResource($user),
             'recommendedProducts' => ProductCardResource::collection($recommendedProducts),
         ];
     }

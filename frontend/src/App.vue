@@ -1,10 +1,18 @@
 <script setup>
   import { Toaster } from 'vue-sonner';
   import {useAuthStore} from "@/stores/auth.js";
+  import {useCartStore} from "@/stores/cart.js";
   import {onMounted} from "vue";
-  const authStore = useAuthStore()
+  import {useWishlistStore} from "@/stores/wishlist.js";
+  const authStore = useAuthStore();
+  const cartStore = useCartStore();
+  const wishlistStore = useWishlistStore();
   onMounted(async () => {
     await authStore.fetchUser();
+    await cartStore.initialize(authStore.isAuth);
+    if (authStore.isAuth) {
+      await wishlistStore.loadWishlist()
+    }
   })
 </script>
 

@@ -1,12 +1,15 @@
 <?php
 use App\Http\Controllers\Api\AccountDashboardController;
 use App\Http\Controllers\Api\AccountInfoController;
+use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 Route::get('/',[HomeController::class,'index'])->name('home');
@@ -35,5 +38,23 @@ Route::prefix('account')->middleware('auth:sanctum')->group(function(){
     Route::delete('/notifications/{id}',[NotificationController::class,'destroy'])->middleware('auth:sanctum')->name('account.notifications.destroy');
     Route::patch('/notifications/{id}/read',[NotificationController::class,'markAsRead'])->middleware('auth:sanctum')->name('account.notifications.read');
     Route::patch('/notifications/read',[NotificationController::class,'markAsReadAll'])->middleware('auth:sanctum')->name('account.notifications.readAll');
+    Route::get('/addresses',[AddressController::class,'index'])->middleware('auth:sanctum')->name('account.addresses');
+    Route::post('/addresses',[AddressController::class,'store'])->middleware('auth:sanctum')->name('account.addresses.store');
+    Route::put('/addresses/{address}',[AddressController::class,'update'])->middleware('auth:sanctum')->name('account.addresses.update');
+    Route::delete('/addresses/{address}',[AddressController::class,'destroy'])->middleware('auth:sanctum')->name('account.addresses.delete');
+    Route::patch('/addresses/{address}/default',[AddressController::class,'setDefault'])->middleware('auth:sanctum')->name('account.addresses.default');
 });
+Route::prefix('cart')
+    ->controller(CartController::class)
+    ->middleware('auth:sanctum')->group(function(){
+    Route::get('/','index')->middleware('auth:sanctum')->name('cart');
+    Route::post('/','store')->middleware('auth:sanctum')->name('cart.store');
+    Route::patch('{id}','update')->middleware('auth:sanctum')->name('cart.update');
+    Route::delete('{id}','destroy')->middleware('auth:sanctum')->name('cart.destroy');
+    Route::delete('clear','clear')->middleware('auth:sanctum')->name('cart.clear');
+    Route::post('merge','merge')->middleware('auth:sanctum')->name('cart.merge');
+});
+Route::get('wishlist',[WishlistController::class,'index'])->middleware('auth:sanctum')->name('wishlist');
+Route::post('wishlist/item/{id}',[WishlistController::class,'store'])->middleware('auth:sanctum')->name('wishlist.store');
+Route::delete('wishlist/item/{id}',[WishlistController::class,'destroy'])->middleware('auth:sanctum')->name('wishlist.delete');
 

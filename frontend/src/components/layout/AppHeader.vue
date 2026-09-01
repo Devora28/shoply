@@ -1,23 +1,26 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
-import {TransitionRoot, TransitionChild, Dialog, DialogPanel,} from '@headlessui/vue';
 import {
-  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package,LogOut,ChevronRight,Truck,Tag,Home,Info,Mail,HelpCircle,Trash2,HeartPulse,House,Laptop,LogIn,ShoppingBag,MapPin,Settings
+  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package,LogOut,ChevronRight,Truck,Tag,Trash2,HeartPulse,House,Laptop,LogIn,ShoppingBag,MapPin,Settings
 } from "@lucide/vue";
 import {useCategoryStore} from "@/stores/category.js";
 import {useAuthStore} from "@/stores/auth.js";
 import api from "@/api/axios.js";
 import {endpoints} from "@/api/endpoints.js";
 import {useRouter} from "vue-router";
+import {useCartStore} from "@/stores/cart.js";
+import {calcDiscount, formatPrice} from "@/utils/helpers.js";
+import {useWishlistStore} from "@/stores/wishlist.js";
 const router = useRouter()
 const authStore = useAuthStore();
-const mobileMenuOpen = ref(false)
 const iconMap = { Laptop, Shirt, House, HeartPulse, Dumbbell, BookOpen, Gamepad2}
 const hoveredCategory = ref(null)
 const showMegaMenu = ref(false)
 const showCartDropdown = ref(false)
 const showProfileDropdown = ref(false)
 const showNotifDropdown = ref(false)
+const cartStore = useCartStore()
+const wishlistStore = useWishlistStore();
 const notifications = [
   { id: 1, icon: Truck, title: 'Order shipped', body: 'ORD-2025-0810 is on the way', time: '2h', unread: true },
   { id: 2, icon: Tag, title: 'Flash Sale 40% off', body: 'Electronics sale ends in 6h', time: '5h', unread: true },
@@ -40,7 +43,10 @@ const logout = async () => {
       }
     });
     if (response.data.success){
-      authStore.logout()
+      authStore.logout();
+      localStorage.removeItem('cart');
+      cartStore.reset();
+      wishlistStore.clearWishlist();
       setTimeout(async () => {
         await router.push({name: 'home'})
       },1000);
@@ -94,15 +100,15 @@ const sliceWord = computed(() => {
     <span class="hidden sm:inline text-ink-300">Use code <span class="font-bold text-accent-400">SHOPLY10</span> for 10% off your first order</span>
   </div>
   <!-- Main Header -->
-  <header class="sticky top-0 z-40 bg-white border-b border-ink-200 shadow-sm">
+  <header class="hidden md:block sticky top-0 z-40 bg-white border-b border-ink-200 shadow-sm">
     <div class="section">
       <div class="flex items-center gap-4 h-16">
-        <!-- Logo -->
-        <router-link to="/" class="flex items-center gap-2 shrink-0">
+        <!-- Logo (desktop only) -->
+        <router-link to="/" class="hidden md:flex items-center gap-2 shrink-0">
           <div class="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
             <ShoppingCart class="w-5 h-5 text-white" />
           </div>
-          <span class="text-xl font-bold text-ink-900 hidden sm:block">Shoply</span>
+          <span class="text-xl font-bold text-ink-900">Shoply</span>
         </router-link>
         <!-- Search (desktop) -->
         <div class="hidden md:flex flex-1 max-w-2xl">
@@ -149,52 +155,66 @@ const sliceWord = computed(() => {
               </div>
             </Transition>
           </div>
-
           <!-- Wishlist -->
           <router-link to="/wishlist" class="relative btn-ghost btn-icon hidden sm:flex" aria-label="Wishlist">
             <Heart class="w-5 h-5" />
-            <span  class="absolute top-1 right-1 w-4 h-4 bg-danger-500 text-white text-2xs font-bold rounded-full flex items-center justify-center">5</span>
+            <span v-if="wishlistStore.itemsCount > 0" class="absolute top-1 right-1 w-4 h-4 bg-danger-500 text-white text-2xs font-bold rounded-full flex items-center justify-center">{{wishlistStore.itemsCount}}</span>
           </router-link>
-
-          <!-- Cart -->
-          <div class="relative">
+          <!-- Cart (desktop only) -->
+          <div class="relative hidden md:block">
             <button
               class="relative btn-ghost btn-icon"
               @click="showCartDropdown = !showCartDropdown; showProfileDropdown = false; showNotifDropdown = false"
               aria-label="Cart"
             >
               <ShoppingCart class="w-5 h-5" />
-              <span class="absolute top-1 right-1 w-4 h-4 bg-primary-600 text-white text-2xs font-bold rounded-full flex items-center justify-center">5</span>
+              <span v-if="cartStore.totalItems > 0" class="absolute top-1 right-1 w-4 h-4 bg-primary-600 text-white text-2xs font-bold rounded-full flex items-center justify-center">{{cartStore.totalItems}}</span>
             </button>
             <Transition name="dropdown">
               <div v-if="showCartDropdown" class="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-dropdown border border-ink-200 overflow-hidden z-50">
                 <div class="flex items-center justify-between px-4 py-3 border-b border-ink-200">
-                  <span class="font-semibold text-ink-900">Cart (5)</span>
-                  <button class="text-ink-400 hover:text-ink-900" @click="showCartDropdown = false"><X class="w-4 h-4" /></button>
+                  <span class="font-semibold text-ink-900">Cart ({{cartStore.totalItems}})</span>
+                  <button class="text-ink-400 hover:text-ink-900" @click="showCartDropdown = false">
+                    <X class="w-4 h-4"/>
+                  </button>
                 </div>
-                <div class="max-h-80 overflow-y-auto p-3 space-y-2">
-                  <div class="flex gap-3 p-2 rounded-xl hover:bg-ink-50">
-                    <img src="" alt="item.name" class="w-14 h-14 rounded-lg object-cover shrink-0" />
+                <div v-if="cartStore.totalItems > 0" class="max-h-80 overflow-y-auto p-3 space-y-2">
+                  <div v-for="item in cartStore.items" :key="item.id" class="flex gap-3 p-2 rounded-xl hover:bg-ink-50">
+                    <router-link :to="endpoints.product(item.product.id)">
+                      <img :src="item.product.image" :alt="item.product.name" class="w-14 h-14 rounded-lg object-cover shrink-0" />
+                    </router-link>
                     <div class="flex-1 min-w-0">
-                      <router-link to="" class="text-sm font-medium text-ink-900 clamp-1 hover:text-primary-600" @click="showCartDropdown = false">ssss</router-link>
-                      <p class="text-xs text-ink-500">sss - Qty: 2</p>
+                      <router-link :to="endpoints.product(item.product.id)" class="text-sm font-medium text-ink-900 clamp-1 hover:text-primary-600" @click="showCartDropdown = false">{{item.product.name}}</router-link>
+                      <p class="text-xs text-ink-500">
+                        <template v-if="item.variant?.attributes">
+                          {{ Object.values(item.variant.attributes).join(' - ') }}
+                          - Qty: {{ item.quantity }}
+                        </template>
+                        <template v-else>
+                          Qty: {{ item.quantity }}
+                        </template>
+                      </p>
                       <div class="flex items-center justify-between mt-1">
-                        <span class="text-sm font-bold text-primary-700">55</span>
-                        <button class="text-ink-400 hover:text-danger-500">
+                        <span class="text-sm font-bold text-primary-700">
+                          {{ formatPrice(calcDiscount(cartStore.getItemPrice(item), item.product.discount)) }}
+                        </span>
+                        <button @click="cartStore.removeFromCart(
+                          {item,isAuthenticated: authStore.isAuth}
+                          )" class="text-ink-400 hover:text-danger-500">
                           <Trash2 class="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!--<div v-else class="p-8 text-center">
+                <div v-else class="p-8 text-center">
                   <ShoppingCart class="w-10 h-10 text-ink-300 mx-auto mb-2" />
                   <p class="text-sm text-ink-500">Your cart is empty</p>
-                </div>-->
-                <div class="p-4 border-t border-ink-200 bg-ink-50">
+                </div>
+                <div v-if="cartStore.totalItems > 0" class="p-4 border-t border-ink-200 bg-ink-50">
                   <div class="flex items-center justify-between mb-3">
                     <span class="text-sm text-ink-600">Subtotal</span>
-                    <span class="text-lg font-bold text-ink-900">1000</span>
+                    <span class="text-lg font-bold text-ink-900">{{formatPrice(cartStore.subtotal)}}</span>
                   </div>
                   <div class="grid grid-cols-2 gap-2">
                     <router-link to="/cart" class="btn-secondary btn-md" @click="showCartDropdown = false">View Cart</router-link>
@@ -261,10 +281,6 @@ const sliceWord = computed(() => {
               <span>Sign In / Sign Up</span>
             </router-link>
           </div>
-          <!-- Mobile menu button -->
-          <button class="btn-ghost btn-icon md:hidden" @click="mobileMenuOpen = true" aria-label="Open menu">
-            <Menu class="w-5 h-5" />
-          </button>
         </div>
       </div>
       <!-- Category Nav (desktop) -->
@@ -347,75 +363,6 @@ const sliceWord = computed(() => {
     </Transition>
     <div v-if="showCartDropdown || showProfileDropdown || showNotifDropdown" class="fixed inset-0 z-30" @click="closeAll"></div>
   </header>
-  <!-- Mobile Menu Drawer -->
-  <Teleport to="body">
-    <TransitionRoot :show="mobileMenuOpen" as="template">
-      <Dialog as="div" class="relative z-50 md:hidden" @close="mobileMenuOpen = false">
-        <TransitionChild enter="duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="duration-200" leave-from="opacity-100" leave-to="opacity-0" as="template">
-          <div class="fixed inset-0 bg-ink-950/50 backdrop-blur-sm" />
-        </TransitionChild>
-        <TransitionChild enter="duration-300 ease-out-expo" enter-from="translate-x-full" enter-to="translate-x-0" leave="duration-200 ease-in" leave-from="translate-x-0" leave-to="translate-x-full" as="template">
-          <DialogPanel class="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white flex flex-col">
-            <div class="flex items-center justify-between px-4 h-16 border-b border-ink-200">
-              <span class="font-bold text-lg text-ink-900">Menu</span>
-              <button class="btn-ghost btn-icon" @click="mobileMenuOpen = false"><X class="w-5 h-5" /></button>
-            </div>
-            <div class="p-4 border-b border-ink-200">
-              <div class="relative">
-                <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  class="w-full pl-10 pr-4 py-2.5 text-sm bg-ink-100 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-primary-500/20"
-                  @keydown.enter=" mobileMenuOpen = false"
-                />
-              </div>
-            </div>
-            <div class="flex-1 overflow-y-auto py-2">
-              <router-link to="/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <Home class="w-5 h-5 text-ink-400" /> Home
-              </router-link>
-              <div class="px-4 py-2">
-                <p class="text-xs font-semibold text-ink-400 uppercase tracking-wide mb-1">Categories</p>
-              </div>
-              <router-link v-for="cat in categoryStore.categories" :key="cat.slug" :to="`/shop?cat=${cat.slug}`" class="flex items-center gap-3 px-4 py-2.5 text-sm text-ink-600 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <div :class="['w-8 h-8 rounded-lg flex items-center justify-center', cat.color]">
-                  <component :is="iconMap[cat.image]" class="w-4 h-4" />
-                </div>
-                {{ cat.name }}
-              </router-link>
-              <div class="border-t border-ink-200 my-2"></div>
-              <router-link to="/wishlist" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <Heart class="w-5 h-5 text-ink-400" /> Wishlist
-              </router-link>
-              <router-link to="/blog" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <BookOpen class="w-5 h-5 text-ink-400" /> Blog
-              </router-link>
-              <router-link to="/about" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <Info class="w-5 h-5 text-ink-400" /> About Us
-              </router-link>
-              <router-link to="/contact" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <Mail class="w-5 h-5 text-ink-400" /> Contact
-              </router-link>
-              <router-link to="/faq" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <HelpCircle class="w-5 h-5 text-ink-400" /> FAQ
-              </router-link>
-              <div class="border-t border-ink-200 my-2"></div>
-              <router-link to="/account" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <User class="w-5 h-5 text-ink-400" /> My Account
-              </router-link>
-              <router-link to="/account/orders" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-ink-700 hover:bg-ink-50" @click="mobileMenuOpen = false">
-                <Package class="w-5 h-5 text-ink-400" /> My Orders
-              </router-link>
-              <button type="button" @click="logout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger-600 hover:bg-danger-50 w-full text-left">
-                <LogOut class="w-5 h-5" /> Logout
-              </button>
-            </div>
-          </DialogPanel>
-        </TransitionChild>
-      </Dialog>
-    </TransitionRoot>
-  </Teleport>
 </template>
 
 <style scoped>
