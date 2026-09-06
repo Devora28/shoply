@@ -52,9 +52,9 @@ class AccountInfoService{
     public function updateAvatar(User $user,UploadedFile $file) {
         $path = Image::fromUpload($file)
             ->orient()
-            ->cover(500,500)
+            ->cover(400,400)
             ->toWebp()
-            ->quality(100)
+            ->quality(85)
             ->storePublicly('avatars', 'public');
         if($user->avatar){
             Storage::disk('public')->delete($user->avatar);

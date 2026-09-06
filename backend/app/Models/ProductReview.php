@@ -17,4 +17,7 @@ class ProductReview extends Model
     public function cons(){
         return $this->hasMany(ReviewCons::class,'review_id');
     }
+    public function votes(){
+        return $this->hasMany(ProductReviewVote::class,'review_id');
+    }
 }

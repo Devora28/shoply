@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import {
-  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,User,ShoppingCart,X,Package,LogOut,ChevronRight,Truck,Tag,Trash2,HeartPulse,House,Laptop,LogIn,ShoppingBag,MapPin,Settings
+  Shirt,Dumbbell,BookOpen,Gamepad2,ChevronDown,Menu,Search,Heart,Bell,ShoppingCart,X,Package,LogOut,ChevronRight,Truck,Tag,Trash2,HeartPulse,House,Laptop,LogIn,ShoppingBag,MapPin,Settings
 } from "@lucide/vue";
 import {useCategoryStore} from "@/stores/category.js";
 import {useAuthStore} from "@/stores/auth.js";
@@ -44,7 +44,6 @@ const logout = async () => {
     });
     if (response.data.success){
       authStore.logout();
-      localStorage.removeItem('cart');
       cartStore.reset();
       wishlistStore.clearWishlist();
       setTimeout(async () => {
@@ -179,28 +178,93 @@ const sliceWord = computed(() => {
                   </button>
                 </div>
                 <div v-if="cartStore.totalItems > 0" class="max-h-80 overflow-y-auto p-3 space-y-2">
-                  <div v-for="item in cartStore.items" :key="item.id" class="flex gap-3 p-2 rounded-xl hover:bg-ink-50">
-                    <router-link :to="endpoints.product(item.product.id)">
-                      <img :src="item.product.image" :alt="item.product.name" class="w-14 h-14 rounded-lg object-cover shrink-0" />
+                  <div
+                    v-for="item in cartStore.items"
+                    :key="item.id"
+                    class="flex gap-3 p-2.5 rounded-xl hover:bg-ink-50 transition-colors"
+                  >
+                    <!-- Product Image -->
+                    <router-link
+                      :to="`products/${item.product.id}/${item.product.slug}`"
+                      @click="showCartDropdown = false"
+                      class="shrink-0"
+                    >
+                      <img
+                        :src="item.product.image"
+                        :alt="item.product.name"
+                        class="w-16 h-16 rounded-lg object-cover"
+                      />
                     </router-link>
+                    <!-- Product Info -->
                     <div class="flex-1 min-w-0">
-                      <router-link :to="endpoints.product(item.product.id)" class="text-sm font-medium text-ink-900 clamp-1 hover:text-primary-600" @click="showCartDropdown = false">{{item.product.name}}</router-link>
-                      <p class="text-xs text-ink-500">
-                        <template v-if="item.variant?.attributes">
-                          {{ Object.values(item.variant.attributes).join(' - ') }}
-                          - Qty: {{ item.quantity }}
-                        </template>
-                        <template v-else>
-                          Qty: {{ item.quantity }}
-                        </template>
+                      <!-- Product Name -->
+                      <router-link
+                        :to="`products/${item.product.id}/${item.product.slug}`"
+                        class="block text-sm font-medium text-ink-900 clamp-1 hover:text-primary-600"
+                        @click="showCartDropdown = false"
+                      >
+                        {{ item.product.name }}
+                      </router-link>
+                      <!-- Variant -->
+                      <p
+                        v-if="item.variant?.attributes"
+                        class="text-xs text-ink-500 mt-1 clamp-1"
+                      >
+                        {{ Object.values(item.variant.attributes).join(' - ') }}
                       </p>
-                      <div class="flex items-center justify-between mt-1">
+
+                      <!-- Bottom Row -->
+                      <div class="flex items-center justify-between mt-2">
+
+                        <!-- Quantity -->
+                        <div
+                          class="inline-flex items-center border border-ink-200 rounded-lg bg-white overflow-hidden"
+                        >
+                          <!-- Minus -->
+                          <button
+                            type="button"
+                            class="w-7 h-7 flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-900 transition-colors"
+                            @click.stop="
+                            cartStore.updateQuantity({
+                              item,quantity: Number(item.quantity) - 1,isAuthenticated: authStore.isAuth}
+                            )"
+                          >
+                            −
+                          </button>
+                          <!-- Quantity -->
+                          <span class="min-w-8 px-1 text-center text-xs font-semibold text-ink-900">
+                            {{ item.quantity }}
+                          </span>
+                          <!-- Plus -->
+                          <button
+                            type="button"
+                            class="w-7 h-7 flex items-center justify-center text-ink-500 hover:bg-ink-100 hover:text-ink-900 transition-colors"
+                            @click.stop="
+                              cartStore.updateQuantity({
+                                item,
+                                quantity: Number(item.quantity) + 1,
+                                isAuthenticated: authStore.isAuth
+                              })
+                            "
+                          >
+                            +
+                          </button>
+                        </div>
+                        <!-- Price -->
                         <span class="text-sm font-bold text-primary-700">
-                          {{ formatPrice(calcDiscount(cartStore.getItemPrice(item), item.product.discount)) }}
+                          {{formatPrice(calcDiscount(cartStore.getItemPrice(item),item.product.discount))}}
                         </span>
-                        <button @click="cartStore.removeFromCart(
-                          {item,isAuthenticated: authStore.isAuth}
-                          )" class="text-ink-400 hover:text-danger-500">
+                        <!-- Remove -->
+                        <button
+                          type="button"
+                          class="text-ink-400 hover:text-danger-500 transition-colors"
+                          @click.stop="
+                            cartStore.removeFromCart({
+                              item,
+                              isAuthenticated: authStore.isAuth
+                            })
+                          "
+                        >
                           <Trash2 class="w-3.5 h-3.5" />
                         </button>
                       </div>

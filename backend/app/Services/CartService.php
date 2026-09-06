@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class CartService{
     public function getCart(User $user){
         $cart = $user->cart()->firstOrCreate();
-        $cart->load(['items.product','items.variant']);
+        $cart->load(['items.product.brand','items.variant']);
         return $cart;
     }
     public function addItem(User $user, array $data): Cart{

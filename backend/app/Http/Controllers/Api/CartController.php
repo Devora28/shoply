@@ -28,19 +28,16 @@ class CartController extends Controller
             'variant_id' => ['nullable', 'exists:product_variants,id'],
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
-
         $cart = $this->cartService->addItem(
             $request->user(),
             $validated
         );
-
         return response()->json([
             'success' => true,
             'message' => 'Item added to cart successfully',
             'data' => new CartResource($cart),
         ]);
     }
-
     public function update(Request $request, int $id)
     {
         $validated = $request->validate([

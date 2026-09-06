@@ -8,9 +8,11 @@ import {useAuthStore} from "@/stores/auth.js";
 import {toast} from "vue-sonner";
 import {useTitle} from "@vueuse/core";
 import {useCartStore} from "@/stores/cart.js";
+import {useWishlistStore} from "@/stores/wishlist.js";
 useTitle('Shoply | Auth Page')
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
 const router = useRouter()
 const route = useRoute()
 const email = ref('')
@@ -141,6 +143,7 @@ async function submitOtp() {
     if (response.data.success){
       await authStore.login(response.data.token);
       await cartStore.mergeGuestCart()
+      await wishlistStore.loadWishlist();
       const redirectUrl = route.query.redirect;
       setTimeout(() => {
         router.push(redirectUrl || '/')
@@ -171,6 +174,7 @@ async function submitPassword() {
     if (response.data.success){
       await authStore.login(response.data.token);
       await cartStore.mergeGuestCart();
+      await wishlistStore.loadWishlist();
       const redirectUrl = route.query.redirect;
       setTimeout(() => {
         router.push(redirectUrl || '/')

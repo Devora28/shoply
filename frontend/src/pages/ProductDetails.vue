@@ -23,6 +23,7 @@ import {useAuthStore} from "@/stores/auth.js";
 import {useTitle} from "@vueuse/core";
 import {useCartStore} from "@/stores/cart.js";
 import {useWishlistStore} from "@/stores/wishlist.js";
+import BaseModal from "@/components/ui/BaseModal.vue";
 const wishlistStore = useWishlistStore();
 const pageTitle = ref(null);
 useTitle()
@@ -408,6 +409,35 @@ const loadMoreReviews = async () => {
     loadingMore.value = false;
   }
 }
+const showLoginModal = ref(false)
+const handleReviewVote = async (reviewId,isHelpful) => {
+  const token = localStorage.getItem('auth_token');
+  if (!token){
+    showLoginModal.value = true;
+    return;
+  }
+  try {
+    const response = await api.post(endpoints.reviewVote(reviewId),
+      {
+        is_helpful: isHelpful
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+    const updatedReview = response.data.data;
+    const index = productReviews.value.findIndex(
+      review => review.id === reviewId
+    );
+    if (index !== -1) {
+      productReviews.value[index] = updatedReview;
+    }
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
 </script>
 
 <template>
@@ -672,11 +702,11 @@ const loadMoreReviews = async () => {
           <!-- Wishlist + Share -->
           <div class="flex items-center gap-3 mb-6">
             <button
-              v-if="wishlistStore.isInWishlist(product.id)"
+              v-if="wishlistStore.isInWishlist(product?.id)"
               class="btn-secondary btn-md flex-1"
               @click="
                 authStore.isAuth
-                  ? wishlistStore.toggleWishlist(product.id)
+                  ? wishlistStore.toggleWishlist(product?.id)
                   : router.push({
                       name: 'login.page',
                       query: {
@@ -694,7 +724,7 @@ const loadMoreReviews = async () => {
               class="btn-secondary btn-md flex-1"
               @click="
                 authStore.isAuth
-                  ? wishlistStore.toggleWishlist(product.id)
+                  ? wishlistStore.toggleWishlist(product?.id)
                   : router.push({
                       name: 'login.page',
                       query: {
@@ -882,7 +912,6 @@ const loadMoreReviews = async () => {
             </li>
           </ul>
         </div>
-
         <!-- Reviews tab -->
         <div v-else-if="activeTab === 'reviews'">
           <!-- Empty state: no reviews yet -->
@@ -900,7 +929,6 @@ const loadMoreReviews = async () => {
                 Write the First Review
               </button>
             </div>
-
             <!-- Write a review form -->
             <div v-if="authStore.isAuth" ref="writeReviewForm" id="write-review" class="card p-5 mt-6">
               <h3 class="text-lg font-bold text-ink-900 mb-4">Write a Review</h3>
@@ -1022,7 +1050,6 @@ const loadMoreReviews = async () => {
               </div>
             </div>
           </div>
-
           <!-- Reviews with summary -->
           <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Rating summary (left) -->
@@ -1046,7 +1073,6 @@ const loadMoreReviews = async () => {
                     </div>
                   </div>
                 </div>
-
                 <!-- Star breakdown -->
                 <div class="space-y-2">
                   <div v-for="i in 5" :key="i" class="flex items-center gap-2">
@@ -1062,13 +1088,11 @@ const loadMoreReviews = async () => {
                     <span class="text-xs text-ink-500 w-8 text-right">{{ ratingSummary?.breakdown[6 - i] }}</span>
                   </div>
                 </div>
-
                 <button class="btn-primary btn-md w-full mt-5" @click="scrollToReviewForm">
                   Write a Review
                 </button>
               </div>
             </div>
-
             <!-- Reviews list + filters (right) -->
             <div class="lg:col-span-2">
               <!-- Sort + Filter -->
@@ -1091,13 +1115,13 @@ const loadMoreReviews = async () => {
                   </button>
                 </div>
               </div>
-
               <!-- Review list -->
               <div class="card p-5">
                 <ReviewItem
                   v-for="review in productReviews"
                   :key="review.id"
                   :review="review"
+                  @vote="handleReviewVote(review.id,$event)"
                 />
                 <p v-if="product?.reviews_count !== 0 && productReviews?.length === 0" class="text-center text-sm text-ink-500 py-8">
                   No reviews match this filter.
@@ -1111,7 +1135,6 @@ const loadMoreReviews = async () => {
                   {{ loadingMore ? 'Loading...' : 'Load More Reviews' }}
                 </button>
               </div>
-
               <!-- Write a review form -->
               <div v-if="authStore.isAuth" ref="writeReviewForm" id="write-review-form" class="card p-5 mt-6">
                 <h3 class="text-lg font-bold text-ink-900 mb-4">Write a Review</h3>
@@ -1135,7 +1158,6 @@ const loadMoreReviews = async () => {
                       <span class="ml-2 text-sm font-medium text-ink-700">{{ reviewForm.rating }} / 5</span>
                     </div>
                   </div>
-
                   <div>
                     <label class="label" for="review-title">Review Title</label>
                     <input id="review-title" v-model="reviewForm.title" type="text" placeholder="Summarize your experience" class="input" />
@@ -1186,12 +1208,10 @@ const loadMoreReviews = async () => {
                         d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                       />
                     </svg>
-
                     <MessageSquare
                       v-else
                       class="w-4 h-4"
                     />
-
                     {{ reviewSubmitting ? 'Submitting...' : 'Submit Review' }}
                   </button>
                 </form>
@@ -1239,7 +1259,6 @@ const loadMoreReviews = async () => {
         </div>
       </div>
     </div>
-
     <!-- Related products skeleton -->
     <div v-if="loading" class="section mt-12">
       <div class="h-8 w-52 skeleton rounded mb-6"></div>
@@ -1283,7 +1302,6 @@ const loadMoreReviews = async () => {
         </SwiperSlide>
       </Swiper>
     </div>
-
     <!-- Added to cart toast -->
     <Transition
       enter-active-class="transition-all duration-300 ease-out"
@@ -1297,7 +1315,6 @@ const loadMoreReviews = async () => {
         <div class="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center shrink-0">
           <Check class="w-5 h-5 text-success-600" />
         </div>
-
         <div>
           <p class="text-sm font-semibold text-ink-900">Review submitted</p>
           <p class="text-xs text-ink-500">Thank you for sharing your experience.</p>
@@ -1305,6 +1322,42 @@ const loadMoreReviews = async () => {
       </div>
     </Transition>
   </div>
+  <BaseModal v-model="showLoginModal" title="Sign in required" size="sm">
+    <div class="p-6">
+      <div class="flex flex-col items-center text-center">
+        <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center mb-4">
+          <LogIn class="w-5 h-5 text-primary-600" />
+        </div>
+        <p class="text-sm text-ink-600 leading-relaxed">
+          Please sign in to vote on this review.
+        </p>
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button
+          type="button"
+          class="btn-secondary btn-md"
+          @click="showLoginModal = false"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-primary btn-md"
+          @click="
+          router.push({
+            name: 'login.page',
+            query: {
+              redirect: router.currentRoute.value.fullPath
+            }
+          })
+        "
+        >
+          <LogIn class="w-4 h-4" />
+          Sign in
+        </button>
+      </div>
+    </div>
+  </BaseModal>
 </template>
 
 <style scoped>

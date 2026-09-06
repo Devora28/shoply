@@ -10,6 +10,7 @@ import AccountOrders from "@/pages/account/AccountOrders.vue";
 import AccountNotifications from "@/pages/account/AccountNotifications.vue";
 import AccountAddresses from "@/pages/account/AccountAddresses.vue";
 import AccountWishlist from "@/pages/account/AccountWishlist.vue";
+import CartPage from "@/pages/account/CartPage.vue";
 
 
 const router = createRouter({
@@ -87,6 +88,13 @@ const router = createRouter({
           component: AccountWishlist,
           meta: {
             requiresAuth: true,
+          },
+        },
+        {
+          path: 'cart',
+          name: 'cart.page',
+          component: CartPage,
+          meta: {
           },
         },
       ]

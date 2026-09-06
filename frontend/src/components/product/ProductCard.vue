@@ -13,9 +13,7 @@ const wishlistStore = useWishlistStore();
 const authStore = useAuthStore();
 </script>
 <template>
-  <div class="card card-hover group cursor-pointer relative flex flex-col"
-       @click="router.push(`/products/${product.id}/${product.slug}`)"
-  >
+  <router-link :to="`/products/${product.id}/${product.slug}`" class="card card-hover group cursor-pointer relative flex flex-col">
     <!-- Badges -->
     <div v-if="product.discount > 0" class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
       <span class="rounded-full px-2.5 py-1 text-xs font-semibold
@@ -28,7 +26,7 @@ const authStore = useAuthStore();
     <button
       v-if="wishlistStore.isInWishlist(product.id)"
       class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/80 glass hover:bg-white shadow-sm transition-all"
-      @click.stop="
+      @click.prevent.stop="
       authStore.isAuth
         ? wishlistStore.toggleWishlist(product.id)
         : router.push({
@@ -46,7 +44,7 @@ const authStore = useAuthStore();
     <button
       v-else
       class="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/80 glass hover:bg-white shadow-sm transition-all"
-      @click.stop="
+      @click.prevent.stop="
       authStore.isAuth
         ? wishlistStore.toggleWishlist(product.id)
         : router.push({
@@ -70,20 +68,6 @@ const authStore = useAuthStore();
         decoding="async"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
-      <!-- Quick actions on hover -->
-      <div class="absolute inset-x-0 bottom-0 p-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-        <button
-          class="flex-1 btn-primary btn-sm"
-          @click.stop=""
-        >
-          <ShoppingCart class="w-4 h-4" /> Add
-        </button>
-        <button class="btn-secondary btn-sm btn-icon"
-            @click.stop="router.push(`/products/${product.id}/${product.slug}`)"
-        >
-          <Eye class="w-4 h-4" />
-        </button>
-      </div>
     </div>
     <!-- Content -->
     <div class="p-3 sm:p-4 flex flex-col flex-1">
@@ -102,5 +86,5 @@ const authStore = useAuthStore();
         Free Shipping
       </div>
     </div>
-  </div>
+  </router-link>
 </template>

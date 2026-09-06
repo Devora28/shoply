@@ -279,9 +279,10 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
   const reset = () => {
-    items.value = []
-    loading.value = false
-    initialized.value = false
+    items.value = [];
+    localStorage.removeItem('cart');
+    loading.value = false;
+    initialized.value = false;
   }
   return {
     items,
@@ -295,6 +296,7 @@ export const useCartStore = defineStore('cart', () => {
     fetchCart,
     addToCart,
     getItemPrice,
+    getItemFinalPrice,
     updateQuantity,
     removeFromCart,
     clearCart,

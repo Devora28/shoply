@@ -34,6 +34,7 @@ class ProductReviewResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
             'pros' => $this->whenLoaded('pros'),
             'cons' => $this->whenLoaded('cons'),
+            'votes' => $this->whenLoaded('votes'),
         ];
     }
 }

@@ -8,6 +8,7 @@ export const endpoints  = {
   logout: '/auth/logout',
   product: (id) => `/products/${id}`,
   ProductReview: (id) => `/products/${id}/reviews`,
+  reviewVote: (review) => `/reviews/${review}/vote`,
   accountDashboard: '/account/dashboard',
   accountInformation: '/account/information',
   accountAvatar: '/account/avatar',
