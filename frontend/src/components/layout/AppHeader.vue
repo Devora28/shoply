@@ -185,7 +185,7 @@ const sliceWord = computed(() => {
                   >
                     <!-- Product Image -->
                     <router-link
-                      :to="`products/${item.product.id}/${item.product.slug}`"
+                      :to="`/products/${item.product.id}/${item.product.slug}`"
                       @click="showCartDropdown = false"
                       class="shrink-0"
                     >
@@ -199,7 +199,7 @@ const sliceWord = computed(() => {
                     <div class="flex-1 min-w-0">
                       <!-- Product Name -->
                       <router-link
-                        :to="`products/${item.product.id}/${item.product.slug}`"
+                        :to="`/products/${item.product.id}/${item.product.slug}`"
                         class="block text-sm font-medium text-ink-900 clamp-1 hover:text-primary-600"
                         @click="showCartDropdown = false"
                       >

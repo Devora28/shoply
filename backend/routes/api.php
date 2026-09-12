@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AccountInfoController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\NotificationController;
@@ -51,6 +52,9 @@ Route::prefix('cart')
     ->middleware('auth:sanctum')->group(function(){
     Route::get('/','index')->name('cart');
     Route::post('/','store')->name('cart.store');
+    Route::post('/promo',[CheckoutController::class,'validatePromoCode'])->name('cart.promo');
+    Route::get('/promo',[CheckoutController::class,'refreshPromoCode'])->name('cart.promo.refresh');
+    Route::delete('/promo',[CheckoutController::class,'removePromoCode'])->name('cart.promo.delete');
     Route::patch('{id}','update')->name('cart.update');
     Route::delete('clear','clear')->name('cart.clear');
     Route::delete('{id}','destroy')->name('cart.destroy');

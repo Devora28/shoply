@@ -24,6 +24,9 @@ export const endpoints  = {
   cartAction: (id) => `/cart/${id}`,
   cartClear: '/cart/clear',
   cartMerge: '/cart/merge',
+  validatePromoCode: '/cart/promo',
+  refreshPromoCode: '/cart/promo',
+  removePromoCode: '/cart/promo',
   wishlist: '/wishlist',
   wishlistItem: (id) => `/wishlist/item/${id}`,
 }

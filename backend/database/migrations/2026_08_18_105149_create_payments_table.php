@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->restrictOnDelete();
             $table->foreignId('user_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('payment_method_id')->constrained('payment_methods')->restrictOnDelete();
+            $table->string('method_name', 100);
+            $table->string('method_code', 50);
             $table->string('payment_number', 40)->unique();
             $table->string('provider', 50);
-            $table->string('method', 30);
             $table->string('transaction_id')->nullable()->index();
             $table->string('provider_payment_id')->nullable()->index();
             $table->string('provider_customer_id')->nullable()->index();

@@ -4,9 +4,13 @@ import api from '@/api/axios.js'
 import { endpoints } from '@/api/endpoints.js'
 import {calcDiscount} from "@/utils/helpers.js";
 export const useCartStore = defineStore('cart', () => {
-  const items = ref([])
-  const loading = ref(false)
-  const initialized = ref(false)
+  const items = ref([]);
+  const loading = ref(false);
+  const initialized = ref(false);
+  const appliedPromo = ref('');
+  const promoDiscount = ref(0);
+  const promoError = ref('');
+  const promoCodeLoading = ref(false);
   const totalItems = computed(() => {
     return items.value.reduce((total, item) => total + Number(item.quantity),0)
   })
@@ -70,23 +74,25 @@ export const useCartStore = defineStore('cart', () => {
       return
     }
     if (isAuthenticated) {
-      await fetchCart()
+      await fetchCart(true)
     } else {
       loadGuestCart()
     }
     initialized.value = true
   }
-  const fetchCart = async () => {
+  const fetchCart = async (showLoading = false) => {
     const token = localStorage.getItem('auth_token');
     try {
-      loading.value = true
+      if (showLoading) {
+        loading.value = true
+      }
       const response = await api.get(endpoints.cart,{
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-      items.value =
-        response.data.data.items ?? []
+      items.value = response.data.data.items ?? [];
+      await refreshPromoCode();
     } catch (error) {
       console.error('Failed to fetch cart:', error)
       throw error
@@ -278,6 +284,74 @@ export const useCartStore = defineStore('cart', () => {
       throw error
     }
   }
+  const applyPromoCode = async (code) => {
+    const token = localStorage.getItem('auth_token');
+    promoError.value = '';
+    try {
+      promoCodeLoading.value = true;
+      const response = await api.post(endpoints.validatePromoCode,
+        {
+        code: code,
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        }
+      );
+      appliedPromo.value = response.data.data.code;
+      promoDiscount.value = response.data.data.discount;
+    }
+    catch (error) {
+      promoError.value = error.response.data.errors?.code?.[0];
+    }
+    finally {
+      promoCodeLoading.value = false;
+    }
+  }
+  const refreshPromoCode = async () => {
+    const token = localStorage.getItem('auth_token')
+
+    try {
+      const response = await api.get(
+        endpoints.refreshPromoCode,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      const coupon = response.data.data
+      if (coupon) {
+        appliedPromo.value = coupon.code
+        promoDiscount.value = coupon.discount
+      } else {
+        appliedPromo.value = ''
+        promoDiscount.value = 0
+      }
+    } catch (error) {
+      console.error('Failed to refresh promo code:', error)
+      appliedPromo.value = ''
+      promoDiscount.value = 0
+    }
+  }
+  const removePromoCode = async () => {
+    const token = localStorage.getItem('auth_token');
+    try {
+      await api.delete(endpoints.removePromoCode,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      appliedPromo.value = '';
+      promoDiscount.value = 0;
+      promoError.value = '';
+    } catch (error) {
+      console.error('Failed to remove promo code:', error);
+    }
+  }
   const reset = () => {
     items.value = [];
     localStorage.removeItem('cart');
@@ -291,6 +365,10 @@ export const useCartStore = defineStore('cart', () => {
     totalItems,
     subtotal,
     isEmpty,
+    appliedPromo,
+    promoDiscount,
+    promoError,
+    promoCodeLoading,
     findItem,
     initialize,
     fetchCart,
@@ -301,6 +379,9 @@ export const useCartStore = defineStore('cart', () => {
     removeFromCart,
     clearCart,
     mergeGuestCart,
-    reset
+    reset,
+    applyPromoCode,
+    refreshPromoCode,
+    removePromoCode
   }
 })

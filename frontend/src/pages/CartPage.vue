@@ -1,23 +1,48 @@
 <script setup>
-import {computed, ref} from 'vue'
+import {nextTick, ref} from 'vue'
 import BaseBreadcrumb from '@/components/ui/BaseBreadcrumb.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import {
-  Trash2, X, ShoppingBag, Tag, Truck, ShieldCheck, RotateCcw, ChevronRight, ShoppingCart,
+  Trash2, X, ShoppingBag, Tag, Truck, ShieldCheck, RotateCcw, ChevronRight, ShoppingCart, LogIn,
 } from '@lucide/vue'
 import {useCartStore} from "@/stores/cart.js";
 import {useAuthStore} from "@/stores/auth.js";
 import {formatPrice} from "@/utils/helpers.js";
-const breadcrumbItems = ['Cart']
-const showClearConfirm = ref(false)
+import BaseModal from "@/components/ui/BaseModal.vue";
+import {useRouter} from "vue-router";
+const router = useRouter();
+const breadcrumbItems = ['Cart'];
+const showClearConfirm = ref(false);
+const authStore = useAuthStore();
+const cartStore = useCartStore();
+const showLoginModal = ref(false);
 const trustBadges = [
   { icon: Truck, label: 'Free shipping over $50' },
   { icon: ShieldCheck, label: 'Secure checkout' },
   { icon: RotateCcw, label: '30-day returns' },
   { icon: Tag, label: 'Price match guarantee' },
-]
-const authStore = useAuthStore();
-const cartStore = useCartStore();
+];
+const promoCode = ref('');
+const applyPromo = (code) => {
+  const cleanCode = code.trim();
+  if (!cleanCode) {
+    return;
+  }
+  if (!authStore.isAuth){
+    showLoginModal.value = true;
+    return
+  }
+  cartStore.applyPromoCode(cleanCode);
+  nextTick();
+  promoCode.value = '';
+}
+const removePromo = () => {
+  cartStore.removePromoCode()
+}
+const confirmClearCart = async () => {
+  await cartStore.clearCart(authStore.isAuth);
+  showClearConfirm.value = false;
+}
 </script>
 
 <template>
@@ -28,13 +53,21 @@ const cartStore = useCartStore();
       <!-- Header -->
       <div class="flex items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
-          <h1 class="text-2xl sm:text-3xl font-bold text-ink-900">Shopping Cart</h1>
-          <span v-if="cartStore.totalItems > 0" class="badge-neutral">
-            {{ cartStore.totalItems }} {{ cartStore.totalItems === 1 ? 'item' : 'items' }}
+          <h1 class="text-2xl sm:text-3xl font-bold text-ink-900">
+            Shopping Cart
+          </h1>
+          <!-- Items Skeleton -->
+          <div v-if="cartStore.loading" class="skeleton h-6 w-16 rounded-full"></div>
+          <!-- Items Count -->
+          <span v-else-if="cartStore.totalItems > 0" class="badge-neutral">
+            {{ cartStore.totalItems }}{{ cartStore.totalItems === 1 ? 'item' : 'items' }}
           </span>
         </div>
+        <!-- Clear Cart Skeleton -->
+        <div v-if="cartStore.loading" class="skeleton h-5 w-24 rounded"></div>
+        <!-- Clear Cart -->
         <button
-          v-if="cartStore.totalItems > 0"
+          v-else-if="cartStore.totalItems > 0"
           class="text-sm text-ink-500 hover:text-danger-600 transition-colors flex items-center gap-1.5"
           @click="showClearConfirm = true"
         >
@@ -42,8 +75,73 @@ const cartStore = useCartStore();
           <span class="hidden sm:inline">Clear cart</span>
         </button>
       </div>
+      <!-- CART SKELETON -->
+      <div v-if="cartStore.loading" class="grid lg:grid-cols-3 gap-6">
+        <!-- LEFT -->
+        <div class="lg:col-span-2 space-y-4">
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="card p-4 sm:p-5 flex gap-4"
+          >
+            <!-- Image -->
+            <div class="shrink-0 w-20 h-20 sm:w-28 sm:h-28 skeleton rounded-2xl"></div>
+            <!-- Content -->
+            <div class="flex-1 min-w-0 flex flex-col">
+              <div class="space-y-2">
+                <div class="skeleton h-3 w-20 rounded"></div>
+                <div class="skeleton h-4 w-3/4 rounded"></div>
+                <div class="skeleton h-4 w-1/2 rounded"></div>
+              </div>
+              <div class="mt-auto pt-4 flex items-center justify-between">
+                <div class="skeleton h-8 w-24 rounded-lg"></div>
+                <div class="space-y-2 flex flex-col items-end">
+                  <div class="skeleton h-5 w-24 rounded"></div>
+                  <div class="skeleton h-3 w-16 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- RIGHT -->
+        <div class="lg:col-span-1">
+          <div class="card p-5 sm:p-6">
+            <div class="skeleton h-6 w-32 rounded mb-5"></div>
+            <!-- Promo -->
+            <div class="space-y-2 mb-5">
+              <div class="skeleton h-4 w-20 rounded"></div>
+              <div class="flex gap-2">
+                <div class="skeleton h-9 flex-1 rounded-lg"></div>
+                <div class="skeleton h-9 w-16 rounded-lg"></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <!-- Summary -->
+            <div class="space-y-4 mt-5">
+              <div class="flex justify-between">
+                <div class="skeleton h-4 w-16 rounded"></div>
+                <div class="skeleton h-4 w-20 rounded"></div>
+              </div>
+              <div class="flex justify-between">
+                <div class="skeleton h-4 w-16 rounded"></div>
+                <div class="skeleton h-4 w-20 rounded"></div>
+              </div>
+              <div class="flex justify-between">
+                <div class="skeleton h-4 w-16 rounded"></div>
+                <div class="skeleton h-4 w-24 rounded"></div>
+              </div>
+            </div>
+            <div class="divider my-4"></div>
+            <div class="flex justify-between items-center mb-5">
+              <div class="skeleton h-5 w-12 rounded"></div>
+              <div class="skeleton h-7 w-28 rounded"></div>
+            </div>
+            <div class="skeleton h-12 w-full rounded-xl"></div>
+          </div>
+        </div>
+      </div>
       <!-- EMPTY CART -->
-      <div v-if="cartStore.totalItems === 0" class="py-16">
+      <div v-else-if="cartStore.totalItems === 0" class="py-16">
         <div class="card max-w-xl mx-auto p-8 sm:p-12 text-center">
           <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-ink-100 text-ink-400 mb-5">
             <ShoppingBag class="w-12 h-12" />
@@ -61,7 +159,6 @@ const cartStore = useCartStore();
           </BaseButton>
         </div>
       </div>
-
       <!-- CART CONTENT -->
       <div v-else class="grid lg:grid-cols-3 gap-6">
         <!-- LEFT: cart items -->
@@ -73,7 +170,7 @@ const cartStore = useCartStore();
           >
             <!-- Image -->
             <router-link
-              :to="`products/${item.product.id}/${item.product.slug}`"
+              :to="`/products/${item.product.id}/${item.product.slug}`"
               class="shrink-0 w-20 h-20 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-ink-100"
             >
               <img
@@ -89,7 +186,7 @@ const cartStore = useCartStore();
                 <div class="min-w-0">
                   <span class="text-2xs font-medium text-ink-400">{{ item.product.brand.name }}</span>
                   <h3 class="text-sm sm:text-base font-semibold text-ink-900 clamp-2 leading-snug">
-                    <router-link :to="`products/${item.product.id}/${item.product.slug}`" class="hover:text-primary-700 transition-colors">
+                    <router-link :to="`/products/${item.product.id}/${item.product.slug}`" class="hover:text-primary-700 transition-colors">
                       {{ item.product.name }}
                     </router-link>
                   </h3>
@@ -177,7 +274,7 @@ const cartStore = useCartStore();
               <!-- Promo code -->
               <div class="mb-5">
                 <label class="label">Promo code</label>
-                <div class="flex gap-2">
+                <div v-if="!cartStore.appliedPromo" class="flex gap-2">
                   <div class="relative flex-1">
                     <Tag class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-400" />
                     <input
@@ -185,11 +282,23 @@ const cartStore = useCartStore();
                       type="text"
                       placeholder="Enter code"
                       class="input input-sm pl-9"
-                      @keyup.enter="applyPromo"
+                      @keyup.enter="applyPromo(promoCode)"
                     />
                   </div>
-                  <button class="btn-secondary btn-sm">Apply</button>
+                  <button @click="applyPromo(promoCode)" :disabled="cartStore.promoCodeLoading" class="btn-secondary btn-sm">
+                    Apply
+                  </button>
                 </div>
+                <div v-else-if="authStore.isAuth" class="flex items-center justify-between bg-success-50 text-success-700 rounded-xl px-3 py-2 text-sm font-medium">
+                  <span class="flex items-center gap-1.5">
+                    <Tag class="w-4 h-4" />
+                    {{ cartStore.appliedPromo }} applied
+                  </span>
+                  <button class="text-success-700 hover:text-success-800" @click="removePromo">
+                    <X class="w-4 h-4" />
+                  </button>
+                </div>
+                <p v-if="cartStore.promoError" class="error-text mt-1.5">{{ cartStore.promoError }}</p>
               </div>
               <div class="divider"></div>
               <!-- Line items -->
@@ -198,10 +307,10 @@ const cartStore = useCartStore();
                   <dt class="text-ink-500">Subtotal</dt>
                   <dd class="font-semibold text-ink-900">{{formatPrice(cartStore.subtotal)}}</dd>
                 </div>
-<!--                <div v-if="discount > 0" class="flex justify-between text-success-600">-->
-<!--                  <dt class="flex items-center gap-1">Discount (10%)</dt>-->
-<!--                  <dd class="font-semibold">-{{ formatPrice(discount) }}</dd>-->
-<!--                </div>-->
+                <div v-if="cartStore.promoDiscount > 0" class="flex justify-between text-success-600">
+                  <dt class="flex items-center gap-1">Discount</dt>
+                  <dd class="font-semibold">-{{ formatPrice(cartStore.promoDiscount) }}</dd>
+                </div>
                 <div class="flex justify-between">
                   <dt class="text-ink-500">Shipping</dt>
                   <dd class="font-semibold text-ink-900">At checkout</dd>
@@ -215,7 +324,7 @@ const cartStore = useCartStore();
               <!-- Total -->
               <div class="flex justify-between items-baseline mb-5">
                 <span class="text-base font-semibold text-ink-900">Total</span>
-                <span class="text-2xl font-bold text-primary-700">{{ formatPrice(cartStore.subtotal) }}</span>
+                <span class="text-2xl font-bold text-primary-700">{{ cartStore.appliedPromo ? formatPrice(cartStore.subtotal - cartStore.promoDiscount) : formatPrice(cartStore.subtotal)}}</span>
               </div>
               <!-- Checkout -->
               <BaseButton variant="primary" size="lg" to="/checkout" class="w-full !rounded-xl mb-3">
@@ -288,7 +397,7 @@ const cartStore = useCartStore();
                 <button class="btn-secondary btn-md flex-1 !rounded-xl" @click="showClearConfirm = false">
                   Cancel
                 </button>
-                <button class="btn-primary btn-md flex-1 !rounded-xl" @click="confirmClear">
+                <button class="btn-primary btn-md flex-1 !rounded-xl" @click="confirmClearCart">
                   Clear cart
                 </button>
               </div>
@@ -296,6 +405,53 @@ const cartStore = useCartStore();
           </div>
         </transition>
       </teleport>
+      <BaseModal v-model="showLoginModal" title="Sign in required" size="md">
+        <div class="p-7 sm:p-9">
+          <!-- Icon -->
+          <div class="flex justify-center mb-6">
+            <div
+              class="w-18 h-18 rounded-2xl bg-primary-50 border border-primary-100
+               flex items-center justify-center"
+            >
+              <LogIn class="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="text-center">
+            <h3 class="text-xl sm:text-2xl font-bold text-ink-900">
+              Sign in to continue
+            </h3>
+            <p class="mt-2.5 text-sm sm:text-base text-ink-500 leading-relaxed">
+              You need to sign in to your account to continue.
+            </p>
+          </div>
+          <!-- Actions -->
+          <div class="mt-8 flex flex-col-reverse sm:flex-row gap-3">
+            <button
+              type="button"
+              class="btn-secondary btn-md sm:flex-1 !rounded-xl"
+              @click="showLoginModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn-primary btn-md sm:flex-1 !rounded-xl"
+              @click="
+                router.push({
+                  name: 'login.page',
+                  query: {
+                    redirect: router.currentRoute.value.fullPath
+                  }
+                })
+              "
+            >
+              <LogIn class="w-4 h-4" />
+              Sign in
+            </button>
+          </div>
+        </div>
+      </BaseModal>
     </div>
   </div>
 </template>
