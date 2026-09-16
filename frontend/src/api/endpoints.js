@@ -29,4 +29,5 @@ export const endpoints  = {
   removePromoCode: '/cart/promo',
   wishlist: '/wishlist',
   wishlistItem: (id) => `/wishlist/item/${id}`,
+  shop: '/shop',
 }

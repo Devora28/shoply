@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductReviewController;
+use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -63,4 +64,5 @@ Route::prefix('cart')
 Route::get('wishlist',[WishlistController::class,'index'])->middleware('auth:sanctum')->name('wishlist');
 Route::post('wishlist/item/{id}',[WishlistController::class,'store'])->middleware('auth:sanctum')->name('wishlist.store');
 Route::delete('wishlist/item/{id}',[WishlistController::class,'destroy'])->middleware('auth:sanctum')->name('wishlist.delete');
+Route::get('shop',[ShopController::class,'index'])->name('shop');
 

@@ -92,6 +92,9 @@ class ProductReviewService{
                 'text' => $data['cons']
             ]);
         }
+        $product->update([
+            'rating' => $product->reviews()->avg('rating'),
+        ]);
         return $review;
     }
     public function handleVote(ProductReview $review,User $user,bool $isHelpful){

@@ -127,7 +127,7 @@ const deleteNotification = async (id) => {
     unreadCount.value = response.data.data.unreadCount;
     const wasLastItem = notifications.value.length === 1;
     if (index !== -1) {
-      notifications.value.splice(index, 1);
+      notifications.value.splice(index,1);
     }
     if (wasLastItem && currentPage.value > 1) {
       currentPage.value--;

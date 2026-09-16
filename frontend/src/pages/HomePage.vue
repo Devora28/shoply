@@ -94,7 +94,7 @@ const categoryIcons = {
                 Shop Now
                 <ArrowRight class="w-5 h-5" />
               </router-link>
-              <router-link to="/shop?cat=electronics" class="btn-secondary btn-lg bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30">
+              <router-link :to="`/shop?categories=${homeData.heroProduct?.category.slug}`" class="btn-secondary btn-lg bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30">
                 Explore {{homeData.heroProduct?.category.name}}
               </router-link>
             </div>

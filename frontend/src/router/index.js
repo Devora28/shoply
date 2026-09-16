@@ -12,15 +12,19 @@ import AccountAddresses from "@/pages/account/AccountAddresses.vue";
 import AccountWishlist from "@/pages/account/AccountWishlist.vue";
 import CartPage from "@/pages/CartPage.vue";
 import CheckoutPage from "@/pages/CheckoutPage.vue";
+import ShopPage from "@/pages/ShopPage.vue";
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior() {
-    return {
-      top: 0,
-      left: 0,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
     }
+    if (to.path === from.path) {
+      return false;
+    }
+    return { top: 0 };
   },
   routes: [
     {
@@ -95,8 +99,7 @@ const router = createRouter({
           path: 'cart',
           name: 'cart.page',
           component: CartPage,
-          meta: {
-          },
+          meta: {},
         },
         {
           path: 'checkout',
@@ -105,6 +108,12 @@ const router = createRouter({
           meta: {
             requiresAuth: true,
           },
+        },
+        {
+          path: 'shop',
+          name: 'shop.page',
+          component: ShopPage,
+          meta: {},
         },
       ]
     },

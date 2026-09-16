@@ -4,6 +4,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
   label: { type: String, default: '' },
   hint: { type: String, default: '' },
+  reverse: { type: Boolean, default: false },
 })
 const emit = defineEmits(['update:modelValue'])
 const model = computed({
@@ -13,7 +14,10 @@ const model = computed({
 </script>
 
 <template>
-  <div class="flex items-start gap-3">
+  <div
+    class="flex items-start gap-3"
+    :class="reverse && 'flex-row-reverse justify-between w-full'"
+  >
     <button
       type="button"
       role="switch"

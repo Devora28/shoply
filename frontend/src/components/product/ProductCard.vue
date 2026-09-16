@@ -74,17 +74,17 @@ const authStore = useAuthStore();
       <span class="text-2xs font-medium text-ink-400 mb-1">{{ product.brand.name }}</span>
       <h3 class="text-sm font-medium text-ink-900 line-clamp-2 min-h-[44px] mb-2 leading-snug">{{ product.name }}</h3>
       <div class="flex items-center gap-1.5 mb-2">
-        <RatingStars :model-value="3.5" size="sm" />
+        <RatingStars :model-value="product.rating" size="sm" />
         <span class="text-xs text-ink-500">(155)</span>
       </div>
       <div class="mt-auto flex items-baseline gap-2">
         <span class="text-lg font-bold text-primary-700">{{formatPrice(calcDiscount(product.price,product.discount))}}</span>
         <span class="text-sm text-ink-400 line-through">{{formatPrice(product.price)}}</span>
       </div>
-      <div class="mt-1.5 flex items-center gap-1 text-xs text-success-600">
+<!--      <div class="mt-1.5 flex items-center gap-1 text-xs text-success-600">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 18H3a1 1 0 01-1-1V8a1 1 0 011-1h12a1 1 0 011 1v10M9 18h6m-9 0a2 2 0 11-4 0m4 0a2 2 0 11-4 0m9-7h4l3 3v4a1 1 0 01-1 1h-2m-4 0a2 2 0 11-4 0m4 0a2 2 0 11-4 0"/></svg>
         Free Shipping
-      </div>
+      </div>-->
     </div>
   </router-link>
 </template>
