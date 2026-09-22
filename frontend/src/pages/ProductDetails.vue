@@ -247,7 +247,6 @@ const selectAttribute = (attribute, value) => {
     ...selectedAttributes.value,
     [attribute]: value,
   }
-
   quantity.value = 1
 }
 

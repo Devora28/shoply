@@ -30,4 +30,7 @@ export const endpoints  = {
   wishlist: '/wishlist',
   wishlistItem: (id) => `/wishlist/item/${id}`,
   shop: '/shop',
+  about: '/about',
+  contact: '/contact',
+  contactMessage: '/contact/message',
 }

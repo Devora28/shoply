@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_methods', function (Blueprint $table) {
+        Schema::create('about_milestones', function (Blueprint $table) {
             $table->id();
+            $table->unsignedSmallInteger('year');
+            $table->string('title');
+            $table->text('description');
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
+            $table->index('sort_order');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_methods');
+        Schema::dropIfExists('about_milestones');
     }
 };

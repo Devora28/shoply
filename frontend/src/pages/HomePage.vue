@@ -139,16 +139,14 @@ const categoryIcons = {
         </div>
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 2. CATEGORY GRID                                             -->
-    <!-- ============================================================ -->
+    <!-- CATEGORY GRID -->
     <section class="section pt-10 sm:pt-14">
       <SectionHeader title="Shop by Category" subtitle="Find exactly what you need across our top categories" to="/" />
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4">
         <router-link
           v-for="cat in categoryStore.categories"
           :key="cat.slug"
-          :to="`/shop?cat=${cat.slug}`"
+          :to="`/shop?categories=${cat.slug}`"
           class="card card-hover group p-4 sm:p-5 flex flex-col items-center text-center gap-3"
         >
           <span
@@ -162,9 +160,7 @@ const categoryIcons = {
         </router-link>
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 3. FLASH SALE                                                -->
-    <!-- ============================================================ -->
+    <!-- FLASH SALE -->
     <section v-if="homeData.flashSaleProducts?.length" class="section pt-10 sm:pt-14">
       <div class="card overflow-hidden">
         <!-- Header bar -->
@@ -227,9 +223,7 @@ const categoryIcons = {
         </Swiper>
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 4. FEATURED PRODUCTS GRID                                   -->
-    <!-- ============================================================ -->
+    <!-- FEATURED PRODUCTS GRID -->
     <section v-if="homeData.featuredProducts?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="Featured Products" subtitle="Handpicked favorites our customers love" to="/shop" />
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -240,9 +234,7 @@ const categoryIcons = {
         />
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 5. PROMO BANNERS                                            -->
-    <!-- ============================================================ -->
+    <!-- PROMO BANNERS -->
     <section class="section pt-10 sm:pt-14">
       <div class="grid md:grid-cols-2 gap-4 sm:gap-5">
         <router-link
@@ -273,9 +265,7 @@ const categoryIcons = {
         </router-link>
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 6. BEST SELLERS                                              -->
-    <!-- ============================================================ -->
+    <!-- BEST SELLERS -->
     <section v-if="homeData.bestSellers?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="Best Sellers" subtitle="Our most popular products this month" to="/shop" />
       <Swiper
@@ -300,9 +290,7 @@ const categoryIcons = {
         </SwiperSlide>
       </Swiper>
     </section>
-    <!-- ============================================================ -->
-    <!-- 7. NEW ARRIVALS                                              -->
-    <!-- ============================================================ -->
+    <!-- NEW ARRIVALS -->
     <section v-if="homeData.newArrivals?.length" class="section pt-10 sm:pt-14">
       <SectionHeader title="New Arrivals" subtitle="Fresh stock just landed — be the first to own them" to="/shop" />
       <Swiper
@@ -327,9 +315,7 @@ const categoryIcons = {
         </SwiperSlide>
       </Swiper>
     </section>
-    <!-- ============================================================ -->
-    <!-- 8. TRUST / BRAND STRIP                                       -->
-    <!-- ============================================================ -->
+    <!-- TRUST / BRAND STRIP -->
     <section class="section pt-10 sm:pt-14">
       <div class="card grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-ink-200/70">
         <div
@@ -347,9 +333,7 @@ const categoryIcons = {
         </div>
       </div>
     </section>
-    <!-- ============================================================ -->
-    <!-- 9. NEWSLETTER CTA                                            -->
-    <!-- ============================================================ -->
+    <!-- NEWSLETTER CTA -->
     <section class="section pt-10 sm:pt-14 pb-16">
       <div class="relative overflow-hidden rounded-3xl gradient-primary text-white px-6 py-10 sm:px-10 sm:py-14 text-center">
         <div class="absolute inset-0 gradient-mesh opacity-50" aria-hidden="true" />

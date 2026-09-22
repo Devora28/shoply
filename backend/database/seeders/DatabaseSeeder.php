@@ -21,6 +21,12 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
+            AboutPageSeeder::class,
+            AboutStatsSeeder::class,
+            AboutValuesSeeder::class,
+            AboutTeamMembersSeeder::class,
+            AboutMilestonesSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

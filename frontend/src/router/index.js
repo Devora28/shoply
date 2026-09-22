@@ -13,6 +13,10 @@ import AccountWishlist from "@/pages/account/AccountWishlist.vue";
 import CartPage from "@/pages/CartPage.vue";
 import CheckoutPage from "@/pages/CheckoutPage.vue";
 import ShopPage from "@/pages/ShopPage.vue";
+import AboutUs from "@/pages/general/AboutUs.vue";
+import FAQ from "@/pages/general/FAQ.vue";
+import PrivacyPolicy from "@/pages/general/PrivacyPolicy.vue";
+import ContactUs from "@/pages/general/ContactUs.vue";
 
 
 const router = createRouter({
@@ -113,6 +117,30 @@ const router = createRouter({
           path: 'shop',
           name: 'shop.page',
           component: ShopPage,
+          meta: {},
+        },
+        {
+          path: 'about',
+          name: 'aboutUs',
+          component: AboutUs,
+          meta: {},
+        },
+        {
+          path: 'faq',
+          name: 'faq.page',
+          component: FAQ,
+          meta: {},
+        },
+        {
+          path: 'privacy',
+          name: 'privacy.page',
+          component: PrivacyPolicy,
+          meta: {},
+        },
+        {
+          path: 'contact',
+          name: 'contact.page',
+          component: ContactUs,
           meta: {},
         },
       ]

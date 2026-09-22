@@ -2,9 +2,11 @@
 use App\Http\Controllers\Api\AccountDashboardController;
 use App\Http\Controllers\Api\AccountInfoController;
 use App\Http\Controllers\Api\AddressController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\GeneralController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\NotificationController;
@@ -61,8 +63,20 @@ Route::prefix('cart')
     Route::delete('{id}','destroy')->name('cart.destroy');
     Route::post('merge','merge')->name('cart.merge');
 });
-Route::get('wishlist',[WishlistController::class,'index'])->middleware('auth:sanctum')->name('wishlist');
-Route::post('wishlist/item/{id}',[WishlistController::class,'store'])->middleware('auth:sanctum')->name('wishlist.store');
-Route::delete('wishlist/item/{id}',[WishlistController::class,'destroy'])->middleware('auth:sanctum')->name('wishlist.delete');
+Route::prefix('wishlist')->controller(WishlistController::class)->group(function(){
+    Route::get('/','index')
+        ->middleware('auth:sanctum')
+        ->name('wishlist');
+    Route::post('/item/{id}','store')
+        ->middleware('auth:sanctum')
+        ->name('wishlist.store');
+    Route::delete('/item/{id}','destroy')
+        ->middleware('auth:sanctum')
+        ->name('wishlist.delete');
+});
 Route::get('shop',[ShopController::class,'index'])->name('shop');
+Route::get('/about', [GeneralController::class, 'aboutUs'])->name('about');
+Route::get('/contact', [GeneralController::class, 'contactUs'])->name('contact');
+Route::post('/contact/message', [GeneralController::class, 'contactMessage'])->name('contact.message');
+Route::get('blogs',[BlogController::class,'index'])->name('blogs');
 

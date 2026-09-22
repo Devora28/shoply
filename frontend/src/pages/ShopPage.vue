@@ -23,7 +23,8 @@ const productsMaxPrice = ref(0);
 const categories = ref([]);
 const brands = ref([]);
 const total = ref(0);
-const isLoading = ref(false);
+const isInitialLoading = ref(false);
+const isProductsLoading = ref(false);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const mainContent = ref(null);
@@ -219,10 +220,14 @@ const trustBadges = [
   { icon: RotateCcw, label: '30-Day Returns' },
   { icon: Tag, label: 'Best Price Guarantee' },
 ]
-const fetchShopData = async () => {
+const fetchShopData = async (initial = false) => {
   const token = localStorage.getItem('auth_token');
   try {
-    isLoading.value = true;
+    if (initial) {
+      isInitialLoading.value = true;
+    } else {
+      isProductsLoading.value = true;
+    }
     const response = await api.get(
       endpoints.shop,
       {
@@ -254,12 +259,13 @@ const fetchShopData = async () => {
     console.error(error);
   }
   finally {
-    isLoading.value = false;
+    isInitialLoading.value = false;
+    isProductsLoading.value = false;
   }
 }
 onMounted(async () => {
   readFiltersFromUrl();
-  await fetchShopData();
+  await fetchShopData(true);
 });
 watch(currentPage,
   async () => {
@@ -283,7 +289,8 @@ watch(currentPage,
       <div class="flex flex-col gap-2 mb-6">
         <div class="flex items-center gap-3">
           <h1 class="text-2xl sm:text-3xl font-bold text-ink-900">All Products</h1>
-          <span class="badge-neutral">{{ total }} items</span>
+          <span v-if="isProductsLoading || isInitialLoading" class="skeleton w-16 h-6 rounded-full"></span>
+          <span v-else class="badge-neutral">{{ total }} items</span>
         </div>
         <p ref="mainContent" class="text-sm text-ink-500 clamp-1">
           Discover premium <!--{{ pageTitle.toLowerCase() }}--> curated for you — top brands, best prices, and fast delivery.
@@ -339,21 +346,33 @@ watch(currentPage,
                   Categories
                 </h3>
                 <div class="space-y-2.5 max-h-36 overflow-y-auto pr-1">
-                  <label
-                    v-for="category in categories"
-                    :key="category.id"
-                    class="flex items-center gap-2.5 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      :value="category.slug"
-                      v-model="selectedCategories"
-                      class="w-4 h-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
-                    />
-                    <span class="text-sm text-ink-600">
+                  <template v-if="isInitialLoading">
+                    <div
+                      v-for="i in 5"
+                      :key="i"
+                      class="flex items-center gap-2.5"
+                    >
+                      <span class="skeleton w-4 h-4 rounded"></span>
+                      <span class="skeleton h-4 rounded-md" :class="i % 2 ? 'w-24' : 'w-32'"></span>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <label
+                      v-for="category in categories"
+                      :key="category.id"
+                      class="flex items-center gap-2.5 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="category.slug"
+                        v-model="selectedCategories"
+                        class="w-4 h-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span class="text-sm text-ink-600">
                       {{ category.name }}
                     </span>
-                  </label>
+                    </label>
+                  </template>
                 </div>
                 <div
                   v-if="categoriesChanged"
@@ -374,21 +393,33 @@ watch(currentPage,
                   Brands
                 </h3>
                 <div class="space-y-2.5 max-h-36 overflow-y-auto pr-1">
-                  <label
-                    v-for="brand in brands"
-                    :key="brand.id ?? brand"
-                    class="flex items-center gap-2.5 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      :value="brand.slug"
-                      v-model="selectedBrands"
-                      class="w-4 h-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
-                    />
-                    <span class="text-sm text-ink-600">
+                  <template v-if="isInitialLoading">
+                    <div
+                      v-for="i in 5"
+                      :key="i"
+                      class="flex items-center gap-2.5"
+                    >
+                      <span class="skeleton w-4 h-4 rounded"></span>
+                      <span class="skeleton h-4 rounded-md" :class="i % 2 ? 'w-20' : 'w-28'"></span>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <label
+                      v-for="brand in brands"
+                      :key="brand.id ?? brand"
+                      class="flex items-center gap-2.5 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        :value="brand.slug"
+                        v-model="selectedBrands"
+                        class="w-4 h-4 rounded border-ink-300 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span class="text-sm text-ink-600">
                       {{brand.name}}
                     </span>
-                  </label>
+                    </label>
+                  </template>
                 </div>
                 <div
                   v-if="brandsChanged"
@@ -423,8 +454,10 @@ watch(currentPage,
                   />
                 </div>
                 <div class="flex justify-between mt-2 text-xs text-ink-400">
-                  <span>{{ formatPrice(productsMinPrice) }}</span>
-                  <span>{{ formatPrice(productsMaxPrice) }}</span>
+                  <span v-if="isProductsLoading || isInitialLoading" class="skeleton w-16 h-4 rounded-md"></span>
+                  <span v-else>{{formatPrice(productsMinPrice)}}</span>
+                  <span v-if="isProductsLoading || isInitialLoading" class="skeleton w-16 h-4 rounded-md"></span>
+                  <span v-else>{{formatPrice(productsMaxPrice)}}</span>
                 </div>
                 <div v-if="priceChanged" class="flex justify-end mt-3">
                   <button
@@ -492,6 +525,13 @@ watch(currentPage,
                   class="badge-primary text-[10px] px-1.5 py-0.5"
                 >{{ activeFilterCount }}</span>
               </button>
+              <p v-if="isProductsLoading || isInitialLoading" class="hidden sm:block">
+                <span class="skeleton inline-block w-24 h-5 rounded-md"></span>
+              </p>
+              <p v-else class="hidden sm:block text-sm text-ink-600">
+                <span class="font-semibold text-ink-900">{{ total }}</span>
+                results
+              </p>
             </div>
             <!-- Sort + view toggle -->
             <div class="flex items-center gap-2">
@@ -612,7 +652,7 @@ watch(currentPage,
             </button>
           </div>
           <!-- Product grid / list -->
-          <ProductGridSkeleton v-if="isLoading" :count="16" />
+          <ProductGridSkeleton v-if="isProductsLoading || isInitialLoading" :count="16" />
           <div
             v-else-if="products.length > 0"
             :class="viewMode === 'grid'
